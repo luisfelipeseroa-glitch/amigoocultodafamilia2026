@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3A2B">
+<title>Amigo oculto de Natal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noite:#1F3A2B; --noite-2:#2D4F3A; --lampada:#FFC857; --coral:#D2693A; --menta:#8DB86B;
+  --botao:#B9522E; --botao-escuro:#963F20; --papel:#F6EFD9; --branco:#FFFFFF; --tinta:#2A2418;
+  --suave:#6E6446; --linha:#E3D8B8; --ok:#2F7A3E;
+  --titulo:'Bricolage Grotesque',Georgia,serif; --texto:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);font:400 16px/1.55 var(--texto);min-height:100vh}
+h1,h2,h3{font-family:var(--titulo);line-height:1.1;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,7vw,3.6rem);font-weight:800}
+h2{font-size:clamp(1.5rem,4.5vw,2rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0 0 .8em}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.suave{color:var(--suave)}
+.oculto{display:none!important}
+
+/* ---------- botões ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;border:2px solid transparent;border-radius:999px;
+  padding:.8em 1.4em;font-weight:700;background:var(--noite);color:#fff;text-decoration:none;line-height:1.1;min-height:48px;transition:transform .12s,background .12s}
+.btn:hover{background:var(--noite-2)}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn-lampada{background:var(--lampada);color:var(--noite)}
+.btn-lampada:hover{background:#FFD479}
+.btn-perigo{background:var(--botao)}
+.btn-perigo:hover{background:var(--botao-escuro)}
+.btn-borda{background:transparent;color:var(--noite);border-color:var(--noite)}
+.btn-borda:hover{background:rgba(31,58,43,.08)}
+.btn-grande{font-size:1.1rem;padding:1em 1.8em;min-height:56px}
+.btn-pequeno{padding:.5em 1em;min-height:38px;font-size:.9rem}
+.btn-link{background:none;border:0;padding:.5em;text-decoration:underline;font-weight:600;color:inherit}
+
+/* ---------- abertura ---------- */
+.abertura{background:var(--noite);color:#fff;min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.abertura::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 500px at 50% -10%,rgba(156,199,122,.28),transparent 60%);pointer-events:none}
+.luzes-faixa{display:flex;justify-content:center;overflow:hidden;position:relative;height:62px}
+.luzes{flex:none;height:62px;width:auto;display:block}
+.bulbo{animation:pisca 2.6s ease-in-out infinite}
+@keyframes pisca{0%,100%{opacity:1}50%{opacity:.3}}
+.cena{position:absolute;left:0;right:0;top:0;aspect-ratio:16/9;overflow:hidden;pointer-events:none;z-index:0;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 8%,#000 68%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 8%,#000 68%,transparent 100%);mask-composite:intersect}
+.cena img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;opacity:.58;filter:saturate(.88) brightness(.92)}
+.cena::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(31,58,43,.22),rgba(31,58,43,0) 65%)}
+.abertura .luzes-faixa{z-index:2}
+.abertura-miolo{position:relative;z-index:1;flex:1;width:100%;max-width:980px;margin:0 auto;padding:clamp(190px,56vw,230px) 22px 24px;display:grid;gap:20px;align-content:start}
+.abertura h1,.abertura .festa-info,.abertura .lead{text-shadow:0 2px 14px rgba(15,32,22,.9),0 0 3px rgba(15,32,22,.6)}
+.folhas{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.folha{position:absolute;top:-30px;width:var(--s);height:var(--s);opacity:.8;animation:cair var(--d) linear var(--a) infinite}
+@keyframes cair{0%{transform:translate(0,-30px) rotate(0)}50%{transform:translate(28px,50vh) rotate(180deg)}100%{transform:translate(-14px,105vh) rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.folha{animation:none;top:var(--t)}}
+.rev-grade{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.rev-par{background:#fff;border:2px solid var(--linha);border-radius:18px;padding:14px;display:flex;align-items:center;gap:10px;justify-content:space-between;text-align:center}
+.rev-lado{display:grid;gap:6px;justify-items:center;flex:1;min-width:0;font-weight:700;font-size:.92rem}
+.rev-lado img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--lampada)}
+.rev-seta{font-size:1.5rem;color:var(--coral)}
+.rev-carta{width:100%;border:0;background:var(--noite);color:#fff;border-radius:14px;padding:18px 6px;font:700 1.6rem var(--titulo);cursor:pointer}
+.rev-aberta{animation:vira .6s ease}
+@keyframes vira{from{transform:rotateY(90deg);opacity:0}to{transform:none;opacity:1}}
+.nota-foto{font-size:.78rem;line-height:1.45;color:#CFC49B;max-width:44ch;margin:2px 0 0;text-shadow:0 1px 8px rgba(15,32,22,.8)}
+.abertura .lead{font-size:1.15rem;color:#EFE5C2;max-width:34ch}
+.festa-info{margin:0;font-size:1.05rem}
+.festa-info b{display:block;font-family:var(--titulo);font-size:1.35rem}
+.acoes{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.abertura .btn-link{color:#fff}
+.avatares{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.avatares .pilha{display:flex}
+.avatares .pilha img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--noite);margin-left:-10px;background:#fff}
+.avatares .pilha img:first-child{margin-left:0}
+.rodape-mini{position:relative;z-index:1;padding:12px 22px calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center;color:#CFC49B;font-size:.85rem;max-width:980px;width:100%;margin:0 auto}
+.rodape-mini .btn-link{color:#CFC49B;font-size:.85rem}
+@media(min-width:760px){
+  .cena{top:0;left:auto;right:0;width:72%;height:100%;aspect-ratio:auto;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 42%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 78%,transparent);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(to right,transparent,#000 42%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 78%,transparent);mask-composite:intersect}
+  .cena img{object-position:50% 40%}
+  .abertura-miolo{grid-template-columns:minmax(0,520px);padding-top:70px;align-content:center}
+}
+
+/* ---------- páginas internas ---------- */
+.barra{background:var(--noite);color:#fff;position:sticky;top:0;z-index:20}
+.barra .luzes-faixa,.barra .luzes{height:32px}
+.barra-linha{max-width:680px;margin:0 auto;padding:8px 16px 12px;display:flex;align-items:center;gap:12px}
+.barra-linha .quem{flex:1;min-width:0}
+.barra-linha .quem b{display:block;font-family:var(--titulo);font-size:1.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.barra-linha .quem span{font-size:.85rem;color:#DCD0A6}
+.foto-mini{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--lampada);flex:none}
+.pagina{max-width:680px;margin:0 auto;padding:22px 16px 110px}
+.pagina>section{margin-bottom:34px}
+.pagina h2{margin-bottom:10px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--linha);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+.nav-linha{max-width:680px;margin:0 auto;display:flex}
+.nav button{flex:1;border:0;background:none;padding:14px 4px 12px;font-weight:600;font-size:.92rem;color:var(--suave);position:relative}
+.nav button[aria-current=true]{color:var(--noite)}
+.nav button[aria-current=true]::after{content:"";position:absolute;left:22%;right:22%;top:0;height:4px;border-radius:0 0 4px 4px;background:var(--coral)}
+
+/* ---------- formulários ---------- */
+.campo{margin-bottom:16px}
+.campo label,.rotulo{display:block;font-weight:700;margin-bottom:6px;font-size:.95rem}
+.campo .dica{font-weight:400;color:var(--suave);font-size:.88rem}
+input[type=text],input[type=tel],input[type=email],input[type=date],input[type=time],input[type=password],input[type=url],textarea,select{
+  width:100%;font:inherit;color:var(--tinta);background:#fff;border:2px solid var(--linha);border-radius:12px;padding:.75em .9em;min-height:48px}
+textarea{min-height:92px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--noite);outline:none;box-shadow:0 0 0 3px rgba(255,107,87,.35)}
+.linha-2{display:grid;gap:14px}
+@media(min-width:520px){.linha-2{grid-template-columns:1fr 1fr}}
+.erro{color:var(--botao-escuro);font-weight:600;margin:10px 0 0;min-height:1.2em}
+.passos{display:flex;gap:6px;margin:14px 0 22px}
+.passos i{flex:1;height:6px;border-radius:3px;background:var(--linha)}
+.passos i.feito{background:var(--noite)}
+.upload-foto{display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.upload-foto .circulo{width:112px;height:112px;border-radius:50%;background:#fff;border:3px dashed var(--linha);display:grid;place-items:center;overflow:hidden;color:var(--suave);font-size:.85rem;text-align:center;flex:none}
+.upload-foto .circulo img{width:100%;height:100%;object-fit:cover}
+.upload-foto .botoes{display:flex;gap:8px;flex-wrap:wrap}
+.grupo-chips{margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--linha);background:#fff;border-radius:999px;padding:.4em .95em;font-weight:600;font-size:.92rem;min-height:40px}
+.chip[aria-pressed=true]{background:var(--noite);border-color:var(--noite);color:#fff}
+.presente-form{border-top:2px solid var(--linha);padding:18px 0 4px}
+.presente-form h3{margin-bottom:12px}
+.foto-presente{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.foto-presente .quadro{width:72px;height:72px;border-radius:12px;background:#fff;border:2px dashed var(--linha);overflow:hidden;display:grid;place-items:center;color:var(--suave);font-size:.75rem;flex:none}
+.foto-presente .quadro img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- etiqueta de presente ---------- */
+.etiqueta-area{display:flex;flex-direction:column;align-items:center;margin:8px 0 26px}
+.barbante{width:3px;height:54px;background:linear-gradient(var(--lampada),#D9A441);border-radius:2px}
+.etiqueta{position:relative;width:min(100%,340px);background:#fff;border-radius:6px 6px 22px 22px;padding:46px 22px 26px;text-align:center;
+  transform-origin:50% 0;
+  clip-path:polygon(18% 0,82% 0,100% 12%,100% 100%,0 100%,0 12%)}
+.etiqueta::before{content:"";position:absolute;top:16px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--papel);box-shadow:inset 0 0 0 3px #D9A441}
+.sombra{filter:drop-shadow(0 14px 16px rgba(31,58,43,.2));width:min(100%,340px)}
+.sombra .etiqueta{width:100%}
+.etiqueta.balanca{animation:balanca 1.6s ease-out}
+@keyframes balanca{0%{transform:rotate(-9deg)}20%{transform:rotate(7deg)}40%{transform:rotate(-4deg)}60%{transform:rotate(2.5deg)}80%{transform:rotate(-1deg)}100%{transform:rotate(0)}}
+.etiqueta .foto-amigo{width:132px;height:132px;border-radius:50%;object-fit:cover;margin:0 auto 12px;border:4px solid var(--lampada);background:#fff}
+.etiqueta h2{font-size:1.7rem}
+.etiqueta .fechada-texto{font-family:var(--titulo);font-size:1.5rem;font-weight:700;margin:18px 0 6px}
+.etiqueta .misterio{width:112px;height:112px;border-radius:50%;margin:0 auto;background:repeating-linear-gradient(45deg,var(--noite),var(--noite) 8px,var(--noite-2) 8px,var(--noite-2) 16px);display:grid;place-items:center;color:var(--lampada);font-family:var(--titulo);font-size:3rem;font-weight:800}
+.tracos{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 0}
+.tracos span{background:var(--papel);border-radius:999px;padding:.3em .85em;font-size:.9rem;font-weight:600}
+.caixa-dicas{background:#fff;border:2px solid var(--linha);border-radius:14px;padding:14px 16px;margin-top:14px}
+.caixa-dicas ul{margin:8px 0 0;padding-left:1.2em}
+
+.presentes-lista{display:grid;gap:12px}
+.presente{display:grid;grid-template-columns:84px 1fr;gap:14px;background:#fff;border-radius:16px;padding:12px;align-items:center}
+.presente .miniatura{width:84px;height:84px;border-radius:12px;object-fit:cover;background:var(--papel)}
+.presente .sem-foto{width:84px;height:84px;border-radius:12px;background:var(--papel);display:grid;place-items:center;color:var(--suave);font-size:.78rem;text-align:center}
+.presente h3{font-size:1.05rem}
+
+/* ---------- blocos de conteúdo ---------- */
+.aviso-topo{background:var(--lampada);color:var(--noite);border-radius:14px;padding:14px 16px;font-weight:600;margin-bottom:22px}
+.contagem{background:var(--noite);color:#fff;border-radius:18px;padding:22px 22px 20px;margin-bottom:26px}
+.contagem .numero{font-family:var(--titulo);font-weight:800;font-size:3.4rem;line-height:1;color:var(--lampada)}
+.contagem p{margin:6px 0 0;color:#EFE5C2}
+.grade-pessoas{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px}
+.pessoa{text-align:center;font-size:.9rem;font-weight:600;line-height:1.25}
+.pessoa img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto 6px;border:2px solid #fff;box-shadow:0 0 0 2px var(--linha);background:#fff}
+.pessoa small{display:block;font-weight:500;color:var(--suave)}
+.lista-simples{list-style:none;padding:0;margin:0}
+.lista-simples li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--linha)}
+.lista-simples img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;background:#fff}
+.lista-simples .fim{margin-left:auto;color:var(--suave);font-size:.9rem;text-align:right}
+.segmentos{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.pista{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px}
+.pista p.texto{font-family:var(--titulo);font-size:1.15rem;font-weight:600;line-height:1.3;margin-bottom:12px}
+.suspeitos{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:.88rem}
+.suspeitos span{display:flex;align-items:center;gap:6px;background:var(--papel);border-radius:999px;padding:3px 12px 3px 3px;font-weight:600}
+.suspeitos img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.palpite{display:flex;gap:8px}
+.palpite select{flex:1}
+.resultado-certo{color:var(--ok);font-weight:700}
+.resultado-errado{color:var(--botao-escuro);font-weight:700}
+.cartao-inimigo{background:var(--noite);color:#fff;border-radius:18px;padding:22px;text-align:center}
+.cartao-inimigo img{width:112px;height:112px;border-radius:50%;object-fit:cover;margin:0 auto 10px;border:4px solid var(--coral)}
+.cartao-inimigo .missao{background:rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;margin-top:14px;text-align:left}
+
+/* ---------- organizador ---------- */
+.etapa{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:18px 0;border-top:2px solid var(--linha)}
+.etapa:first-child{border-top:0}
+.etapa .marca{width:44px;height:44px;border-radius:50%;background:var(--noite);color:#fff;display:grid;place-items:center;font-family:var(--titulo);font-weight:800;font-size:1.2rem}
+.etapa.feita .marca{background:var(--ok)}
+.etapa h3{margin-bottom:4px}
+.etapa .acoes{margin-top:10px}
+.tag-status{display:inline-block;background:#fff;border:2px solid var(--linha);border-radius:999px;padding:.1em .7em;font-size:.82rem;font-weight:700}
+.tag-status.ok{border-color:var(--ok);color:var(--ok)}
+.tag-status.falta{border-color:var(--coral);color:var(--botao-escuro)}
+.linha-pessoa{display:grid;grid-template-columns:48px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--linha);align-items:start}
+.linha-pessoa img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#fff}
+.linha-pessoa .meta{font-size:.88rem;color:var(--suave);word-break:break-all}
+.linha-pessoa .acoes{margin-top:8px;gap:8px}
+.painel-aba{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;padding-bottom:2px}
+.painel-aba button{border:2px solid var(--linha);background:#fff;border-radius:999px;padding:.5em 1.1em;font-weight:700;white-space:nowrap}
+.painel-aba button[aria-current=true]{background:var(--noite);color:#fff;border-color:var(--noite)}
+.interruptor{display:flex;align-items:flex-start;gap:12px;padding:12px 0}
+.interruptor input{width:22px;height:22px;margin-top:3px;accent-color:var(--noite);flex:none}
+.tabuleiro{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:16px 0}
+.tile{background:#fff;border-radius:14px;padding:12px;border:2px solid var(--linha);display:flex;flex-direction:column;gap:6px;min-height:132px}
+.tile .num{font-family:var(--titulo);font-weight:800;font-size:1.8rem;line-height:1}
+.tile.fechado{background:var(--noite);color:#fff;border-color:var(--noite)}
+.tile.travado{opacity:.75}
+.vez{background:var(--lampada);color:var(--noite);border-radius:18px;padding:18px;display:flex;align-items:center;gap:16px;margin-top:14px}
+.vez img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--noite);background:#fff}
+.vez b{font-family:var(--titulo);font-size:1.6rem;display:block;line-height:1.1}
+.email-demo{background:#fff;border:1px solid var(--linha);border-radius:12px;padding:10px 14px;margin-bottom:10px}
+.email-demo summary{cursor:pointer;font-weight:600}
+.email-demo .corpo{margin-top:10px;border-top:1px solid var(--linha);padding-top:10px}
+
+/* ---------- molduras e rubrica ---------- */
+.molduras{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;margin:0 0 14px}
+.moldura-op{flex:none;border:3px solid var(--linha);background:#fff;border-radius:16px;padding:6px 6px 6px;text-align:center;font-size:.8rem;font-weight:700;width:88px;line-height:1.2}
+.moldura-op canvas{width:64px;height:64px;border-radius:50%;display:block;margin:0 auto 6px;background:var(--papel)}
+.moldura-op[aria-pressed=true]{border-color:var(--noite);background:var(--lampada)}
+.pad-caixa{background:#fff;border:2px dashed var(--suave);border-radius:14px;position:relative}
+.pad-caixa canvas{display:block;width:100%;aspect-ratio:600/220;touch-action:none;border-radius:12px;cursor:crosshair}
+.pad-caixa .linha-base{position:absolute;left:6%;right:6%;bottom:28%;border-top:1px solid var(--linha);pointer-events:none}
+.termo{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:18px;border-left:6px solid var(--coral)}
+.termo ul{margin:8px 0 0;padding-left:1.2em}
+.termo li{margin-bottom:4px}
+.lista-simples .fim img.assinatura-mini{width:auto;height:34px;max-width:120px;border-radius:0;object-fit:contain}
+/* ---------- modal e aviso ---------- */
+.fundo-modal{position:fixed;inset:0;background:rgba(31,58,43,.6);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal{background:#fff;width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:24px 22px calc(22px + env(safe-area-inset-bottom))}
+@media(min-width:560px){.fundo-modal{align-items:center;padding:20px}.modal{border-radius:22px}}
+.modal h3{margin-bottom:8px}
+.modal .acoes{margin-top:18px;justify-content:flex-end}
+.toasts{position:fixed;left:12px;right:12px;bottom:84px;z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--noite);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;max-width:460px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.erro-toast{background:var(--botao-escuro)}
+.faixa-demo{background:var(--lampada);color:var(--noite);text-align:center;font-size:.85rem;font-weight:600;padding:6px 12px}
+.carregando{min-height:100vh;display:grid;place-items:center;background:var(--noite);color:#fff;font-family:var(--titulo);font-size:1.4rem}
+canvas.confete{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:150}
+@media(prefers-reduced-motion:reduce){.bulbo,.sombra{filter:drop-shadow(0 14px 16px rgba(31,58,43,.2));width:min(100%,340px)}
+.sombra .etiqueta{width:100%}
+.etiqueta.balanca{animation:none}.btn{transition:none}}
+</style>
+</head>
+<body>
+<div id="app"><div class="carregando">Pendurando as luzes...</div></div>
+<div id="modais"></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO: cole aqui o endereço do seu Apps Script (termina em /exec).
+   Enquanto estiver vazio, o app funciona em MODO DEMONSTRAÇÃO:
+   os dados ficam só neste navegador e os e-mails aparecem em uma caixa simulada.
+   ============================================================ */
+var API_URL = "";
+
+/* Foto da família usada como cenário da abertura. O organizador pode trocar em Configurações. */
+var HERO = "/*__HERO__*/";
+</script>
+
+<script>
+/*__CORE__*/
+</script>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------------- armazenamento local (com plano B em memória) ---------------- */
+var mem = {};
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return mem[k] || null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
+
+/* ---------------- servidor (real ou demonstração) ---------------- */
+var demoCtx = {
+  uuid: function () { return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function () { return Math.floor(Math.random() * 16).toString(16); }); },
+  agora: function () { return new Date().toISOString(); },
+  hoje: function () { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); },
+  ms: function () { return Date.now(); }
+};
+function demoLoad() { var raw = lsGet('ao_demo'); if (raw) { try { return JSON.parse(raw); } catch (e) {} } return AO.novoEstado(); }
+function demoSave(s) { lsSet('ao_demo', JSON.stringify(s)); }
+function demoEmails() { try { return JSON.parse(lsGet('ao_demo_mail') || '[]'); } catch (e) { return []; } }
+function demo(req) {
+  var s = demoLoad();
+  var r = AO.handle(s, req, demoCtx);
+  if (r.mudou) demoSave(s);
+  if (r.outbox && r.outbox.length) {
+    var l = demoEmails();
+    r.outbox.forEach(function (m) { l.unshift({ to: m.to, subject: m.subject, html: m.html, quando: new Date().toLocaleString('pt-BR') }); });
+    lsSet('ao_demo_mail', JSON.stringify(l.slice(0, 60)));
+  }
+  return r;
+}
+
+async function chamar(action, dados) {
+  var req = Object.assign({ action: action }, dados || {});
+  var r;
+  if (API_URL) {
+    var resp;
+    try { resp = await fetch(API_URL, { method: 'POST', body: JSON.stringify(req) }); }
+    catch (e) { throw new Error('Sem conexão com o servidor. Confira a internet e tente de novo.'); }
+    try { r = await resp.json(); } catch (e) { throw new Error('O servidor respondeu algo inesperado. Confira a implantação do Apps Script.'); }
+  } else {
+    r = demo(req);
+  }
+  if (!r.ok) throw new Error(r.erro || 'Algo deu errado.');
+  if (r.emailsFalharam) aviso('Alguns e-mails não saíram (limite diário do Gmail?). Tente de novo amanhã.', true);
+  return r.data;
+}
+
+/* ---------------- estado ---------------- */
+var S = {
+  view: 'carregando', pub: null, eu: null, token: '', tab: 'amigo', jogo: 'mural',
+  cad: null, ed: null, mural: null, despiste: null, dicas: null, boasVindas: false,
+  adm: { pin: '', temPin: null, dados: null, aba: 'painel', cfg: null }
+};
+
+/* ---------------- utilidades ---------------- */
+function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function $(sel, el) { return (el || document).querySelector(sel); }
+function primeiroNome(n) { return String(n || '').split(' ')[0]; }
+function getPath(o, p) { return p.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); }
+function setPath(o, p, v) { var ks = p.split('.'); var last = ks.pop(); var t = ks.reduce(function (a, k) { return a[k]; }, o); t[last] = v; }
+function diasAte(d) { var p = d.split('-').map(Number); var alvo = new Date(p[0], p[1] - 1, p[2]); var h = new Date(); h = new Date(h.getFullYear(), h.getMonth(), h.getDate()); return Math.round((alvo - h) / 86400000); }
+function dataLonga(d) { return AO.diaSemana(d) + ', ' + AO.fmtBR(d); }
+function digitos(s) { return String(s || '').replace(/\D/g, ''); }
+
+function aviso(msg, erro) {
+  var t = document.createElement('div');
+  t.className = 'toast' + (erro ? ' erro-toast' : '');
+  t.textContent = msg;
+  $('#toasts').appendChild(t);
+  setTimeout(function () { t.remove(); }, erro ? 6000 : 3800);
+}
+
+async function rodar(fn) {
+  try { await fn(); } catch (e) { aviso(e.message || 'Algo deu errado.', true); }
+}
+
+function confirmar(titulo, texto, rotulo, perigo) {
+  return new Promise(function (resolve) {
+    var box = $('#modais');
+    box.innerHTML = '<div class="fundo-modal"><div class="modal" role="dialog" aria-modal="true"><h3>' + esc(titulo) + '</h3><p>' + esc(texto) + '</p>' +
+      '<div class="acoes"><button class="btn btn-borda" id="m-nao">Cancelar</button><button class="btn ' + (perigo ? 'btn-perigo' : '') + '" id="m-sim">' + esc(rotulo) + '</button></div></div></div>';
+    $('#m-nao').onclick = function () { box.innerHTML = ''; resolve(false); };
+    $('#m-sim').onclick = function () { box.innerHTML = ''; resolve(true); };
+    $('#m-sim').focus();
+  });
+}
+
+function pedirTexto(titulo, rotulo, tipo, valor) {
+  return new Promise(function (resolve) {
+    var box = $('#modais');
+    box.innerHTML = '<div class="fundo-modal"><form class="modal" id="m-form"><h3>' + esc(titulo) + '</h3><div class="campo"><label for="m-in">' + esc(rotulo) + '</label>' +
+      '<input id="m-in" type="' + (tipo || 'text') + '" value="' + esc(valor || '') + '" maxlength="120" autocomplete="off"></div>' +
+      '<div class="acoes"><button type="button" class="btn btn-borda" id="m-nao">Cancelar</button><button type="submit" class="btn">Continuar</button></div></form></div>';
+    $('#m-in').focus();
+    $('#m-nao').onclick = function () { box.innerHTML = ''; resolve(null); };
+    $('#m-form').onsubmit = function (e) { e.preventDefault(); var v = $('#m-in').value; box.innerHTML = ''; resolve(v); };
+  });
+}
+
+/* ---------------- fotos ---------------- */
+var LIMITES = { avatar: { max: 256, quad: true, lim: 50000 }, presente: { max: 480, quad: false, lim: 80000 }, capa: { max: 900, quad: false, lim: 180000 } };
+function lerFoto(file, tipo) {
+  var cfg = LIMITES[tipo];
+  return new Promise(function (resolve, reject) {
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function () {
+      var w = img.naturalWidth, h = img.naturalHeight, sx = 0, sy = 0, sw = w, sh = h, cw, ch;
+      if (cfg.quad) { var m = Math.min(w, h); sx = (w - m) / 2; sy = (h - m) / 2; sw = sh = m; cw = ch = Math.min(cfg.max, m); }
+      else { var e = Math.min(1, cfg.max / Math.max(w, h)); cw = Math.round(w * e); ch = Math.round(h * e); }
+      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+      var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cw, ch); g.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+      var q = 0.82, d = c.toDataURL('image/jpeg', q);
+      while (d.length > cfg.lim && q > 0.3) { q -= 0.08; d = c.toDataURL('image/jpeg', q); }
+      URL.revokeObjectURL(url);
+      if (d.length > cfg.lim) reject(new Error('Essa foto ficou pesada demais. Tente outra.')); else resolve(d);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Não consegui abrir essa imagem. Tente outra foto.')); };
+    img.src = url;
+  });
+}
+
+/* ---------------- confete ---------------- */
+function confete() {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.createElement('canvas'); c.className = 'confete';
+  c.width = innerWidth; c.height = innerHeight; document.body.appendChild(c);
+  var g = c.getContext('2d'), cores = ['#D2693A', '#FFC857', '#8DB86B', '#9CC77A', '#FFFFFF'];
+  var ps = []; for (var i = 0; i < 90; i++) ps.push({ x: c.width / 2 + (Math.random() - .5) * 120, y: c.height * .45, vx: (Math.random() - .5) * 12, vy: -Math.random() * 13 - 3, r: 4 + Math.random() * 5, cor: cores[i % 5], rot: Math.random() * 6 });
+  var t0 = performance.now();
+  (function quadro(t) {
+    var dt = t - t0; g.clearRect(0, 0, c.width, c.height);
+    ps.forEach(function (p) { p.vy += .35; p.x += p.vx; p.y += p.vy; p.rot += .15; g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.fillStyle = p.cor; g.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); g.restore(); });
+    if (dt < 2200) requestAnimationFrame(quadro); else c.remove();
+  })(t0);
+}
+
+/* ---------------- pisca-pisca ---------------- */
+function folhasHtml() {
+  var cs = ['#B9522E', '#D2693A', '#C98A3A', '#8DB86B', '#A8431F', '#D9A441'], o = '';
+  for (var i = 0; i < 12; i++) {
+    o += '<svg class="folha" viewBox="0 0 24 24" style="left:' + (4 + i * 8) + '%;--s:' + (16 + (i * 7) % 14) + 'px;--d:' + (13 + (i * 5) % 9) + 's;--a:-' + ((i * 3) % 13) + 's;--t:' + (10 + (i * 17) % 70) + '%"><path fill="' + cs[i % cs.length] + '" d="M12 1C6 6 3 11 5 16c1.2 3 4 5 6 7 .2-3 .3-4 1-6 1.6 2 3 3 5 3 3-3 2-9-5-19z"/><path d="M12 22V9" stroke="rgba(0,0,0,.25)" stroke-width="1" fill="none"/></svg>';
+  }
+  return '<div class="folhas" aria-hidden="true">' + o + '</div>';
+}
+function telaRevelacao() {
+  var R = S.rev, n = R.amigos.length, abertos = Object.keys(R.abertos).length;
+  function lista(arr, pref) {
+    return '<div class="rev-grade">' + arr.map(function (x, i) {
+      var k = pref + i, ab = R.abertos[k];
+      return '<div class="rev-par"><div class="rev-lado"><img src="' + esc(x.de.foto) + '" alt=""><span>' + esc(primeiroNome(x.de.nome)) + '</span></div><span class="rev-seta">🎁</span>' +
+        '<div class="rev-lado">' + (ab ? '<div class="rev-aberta rev-lado"><img src="' + esc(x.para.foto) + '" alt=""><span>' + esc(primeiroNome(x.para.nome)) + '</span></div>'
+        : '<button class="rev-carta" data-act="rev-abrir" data-k="' + k + '" aria-label="Revelar">?</button>') + '</div></div>';
+    }).join('') + '</div>';
+  }
+  var total = n + R.inimigos.length;
+  return (S.demoBanner || '') + '<div class="barra">' + luzes() + '<div class="barra-linha"><div class="quem"><b>A grande revelação</b><span>' + esc(R.titulo) + '</span></div><button class="btn btn-pequeno btn-lampada" data-act="home">Início</button></div></div>' +
+    '<main class="pagina"><h2>Quem tirou quem?</h2><p class="suave">Toque no ? para revelar cada amigo oculto.</p>' +
+    '<div class="acoes" style="margin:12px 0 18px"><button class="btn" data-act="rev-proximo"' + (abertos >= total ? ' disabled' : '') + '>Revelar o próximo</button><button class="btn btn-borda" data-act="rev-todos"' + (abertos >= total ? ' disabled' : '') + '>Revelar todos</button></div>' +
+    lista(R.amigos, 'a') + (R.inimigos.length ? '<h2 style="margin:28px 0 12px">Inimigos ocultos 😈</h2>' + lista(R.inimigos, 'i') : '') + '</main>';
+}
+function luzes() {
+  var cores = ['#D2693A', '#FFC857', '#8DB86B', '#9CC77A'], k = 0, fio = 'M-10 6', bulbos = '';
+  for (var i = 0; i < 4; i++) {
+    var x0 = -10 + i * 110, x1 = x0 + 110, cx = x0 + 55, cy = 62;
+    fio += ' Q' + cx + ' ' + cy + ' ' + x1 + ' 6';
+    [0.17, 0.5, 0.83].forEach(function (t) {
+      var x = (1 - t) * (1 - t) * x0 + 2 * t * (1 - t) * cx + t * t * x1;
+      var y = (1 - t) * (1 - t) * 6 + 2 * t * (1 - t) * cy + t * t * 6;
+      var cor = cores[k % 4], atraso = ((k * 0.43) % 2.6).toFixed(2);
+      bulbos += '<g class="bulbo" style="animation-delay:' + atraso + 's"><rect x="' + (x - 2.5).toFixed(1) + '" y="' + (y - 1).toFixed(1) + '" width="5" height="7" rx="1" fill="#0F2016"/>' +
+        '<ellipse cx="' + x.toFixed(1) + '" cy="' + (y + 12).toFixed(1) + '" rx="5.5" ry="7.5" fill="' + cor + '" style="filter:drop-shadow(0 0 5px ' + cor + ')"/></g>';
+      k++;
+    });
+  }
+  var um = '<svg class="luzes" viewBox="-10 0 440 62" aria-hidden="true"><path d="' + fio + '" fill="none" stroke="#0F2016" stroke-width="2"/>' + bulbos + '</svg>';
+  return '<div class="luzes-faixa" aria-hidden="true">' + um + um + um + um + um + um + '</div>';
+}
+
+/* ---------------- templates ---------------- */
+function avatarPilha() {
+  var ps = (S.pub && S.pub.pessoas) || [];
+  if (!ps.length) return '';
+  var fotos = ps.slice(0, 8).map(function (p) { return '<img src="' + esc(p.foto) + '" alt="' + esc(p.nome) + '">'; }).join('');
+  return '<div class="avatares"><div class="pilha">' + fotos + '</div><span>' + (ps.length === 1 ? '1 pessoa já entrou' : ps.length + ' pessoas já entraram') + '</span></div>';
+}
+
+function telaAbertura() {
+  var c = S.pub.config, aberta = c.fase === 'inscricoes';
+  var capa = c.capa || HERO;
+  var acoes = aberta
+    ? '<button class="btn btn-lampada btn-grande" data-act="cadastrar">Quero participar</button><button class="btn-link" data-act="entrar">Já me cadastrei</button>'
+    : '<button class="btn btn-lampada btn-grande" data-act="entrar">Entrar com meu link</button>';
+  if (c.revelacao) acoes += '<button class="btn btn-borda btn-grande" style="color:#fff;border-color:#fff" data-act="ver-revelacao">Ver a revelação 🎁</button>';
+  var situacao = aberta ? '' : '<p class="lead" style="font-weight:700;color:#FFC857">' + (c.fase === 'aguardando' ? 'As inscrições foram encerradas. O sorteio será em ' + AO.fmtBR(c.dataSorteio) + '.' : 'O sorteio já foi feito. Entre para descobrir quem você tirou.') + '</p>';
+  return (S.demoBanner || '') + '<main class="abertura">' + luzes() +
+    folhasHtml() + '<div class="cena"><img src="' + esc(capa) + '" alt="A família reunida no Natal"></div>' +
+    '<div class="abertura-miolo"><h1>' + esc(c.titulo) + '</h1><p class="lead">' + esc(c.saudacao) + '</p>' + situacao +
+    '<p class="festa-info"><b>' + esc(dataLonga(c.evento.data)) + ', às ' + esc(c.evento.hora) + '</b>' + esc(c.evento.local) + '<br><span style="color:#DCD0A6">' + esc(c.evento.endereco) + '</span></p>' +
+    '<div class="acoes">' + acoes + '</div>' + avatarPilha() + (c.notaFoto ? '<p class="nota-foto">' + esc(c.notaFoto) + '</p>' : '') + '</div>' +
+    '<div class="rodape-mini"><span>Organizado por ' + esc(c.organizador) + '</span><button class="btn-link" data-act="admin">Organizador</button></div></main>';
+}
+
+function chipsGrupo(path, chave, rotulo, valorAtual) {
+  var ops = AO.OPCOES[chave];
+  return '<div class="grupo-chips"><span class="rotulo">' + rotulo + '</span><div class="chips">' + ops.map(function (o) {
+    return '<button type="button" class="chip" data-chip="' + path + '" data-k="' + chave + '" data-v="' + esc(o) + '" aria-pressed="' + (valorAtual === o) + '">' + esc(o) + '</button>';
+  }).join('') + '</div></div>';
+}
+
+function blocoTracos(path, tracos) {
+  return chipsGrupo(path, 'cabeloCor', 'Cor do cabelo', tracos.cabeloCor) + chipsGrupo(path, 'cabeloTipo', 'Tipo do cabelo', tracos.cabeloTipo) +
+    chipsGrupo(path, 'cabeloTam', 'Tamanho do cabelo', tracos.cabeloTam) + chipsGrupo(path, 'olhos', 'Olhos', tracos.olhos) +
+    chipsGrupo(path, 'oculos', 'Óculos', tracos.oculos) + chipsGrupo(path, 'barba', 'Barba', tracos.barba) +
+    chipsGrupo(path, 'altura', 'Altura', tracos.altura) + chipsGrupo(path, 'estilo', 'Estilo', tracos.estilo) +
+    '<div class="campo"><label for="tr-extra">Algo que ajuda a reconhecer você <span class="dica">(opcional)</span></label>' +
+    '<input id="tr-extra" type="text" maxlength="80" data-b="' + path + '.extra" value="' + esc(tracos.extra || '') + '" placeholder="Ex.: sorriso largo, tatuagem no braço"></div>';
+}
+
+function blocoFoto(prefix, d, rotuloVazio) {
+  var h = '<div class="upload-foto"><div class="circulo">' + (d.foto ? '<img src="' + esc(d.foto) + '" alt="Sua foto">' : esc(rotuloVazio || 'Sem foto')) + '</div>' +
+    '<div class="botoes"><label class="btn btn-borda btn-pequeno">Tirar foto<input type="file" accept="image/*" capture="user" hidden data-foto="' + prefix + '.foto" data-tipo="avatar"></label>' +
+    '<label class="btn btn-borda btn-pequeno">Escolher da galeria<input type="file" accept="image/*" hidden data-foto="' + prefix + '.foto" data-tipo="avatar"></label></div></div>';
+  if (d.fotoBase) {
+    var ops = [['nenhuma', 'Sem moldura'], ['gorro', 'Gorro'], ['luzes', 'Pisca-pisca'], ['presente', 'Laço'], ['neve', 'Neve']];
+    h += '<span class="rotulo">Moldura de Natal</span><div class="molduras">' + ops.map(function (o) {
+      return '<button type="button" class="moldura-op" data-act="moldura" data-p="' + prefix + '" data-v="' + o[0] + '" aria-pressed="' + ((d.moldura || 'nenhuma') === o[0]) + '">' +
+        '<canvas width="128" height="128" data-moldura="' + prefix + '" data-tipo="' + o[0] + '"></canvas>' + o[1] + '</button>';
+    }).join('') + '</div>';
+  } else {
+    h += '<p class="suave" style="margin:-6px 0 16px;font-size:.92rem">' + (d.foto ? 'Troque a foto para escolher uma moldura de Natal.' : 'Depois de escolher a foto, aparecem molduras de Natal para você escolher.') + '</p>';
+  }
+  return h;
+}
+
+function padHtml(path) {
+  return '<div class="pad-caixa"><canvas width="600" height="220" data-pad="' + path + '" aria-label="Espaço para assinar ou desenhar com o dedo"></canvas><span class="linha-base"></span></div>' +
+    '<div class="acoes" style="margin-top:8px"><button type="button" class="btn btn-borda btn-pequeno" data-act="limpar-pad" data-p="' + path + '">Limpar</button></div>';
+}
+
+function blocoPresentes(path, lista) {
+  return lista.map(function (g, i) {
+    var p = path + '.' + i;
+    return '<div class="presente-form"><h3>Opção ' + (i + 1) + '</h3>' +
+      '<div class="campo"><label for="pr-n' + i + '">O que você gostaria de ganhar?</label><input id="pr-n' + i + '" type="text" maxlength="60" data-b="' + p + '.nome" value="' + esc(g.nome || '') + '" placeholder="Ex.: Caneca térmica"></div>' +
+      '<div class="foto-presente"><div class="quadro">' + (g.foto ? '<img src="' + esc(g.foto) + '" alt="Foto do presente">' : 'Foto') + '</div>' +
+      '<label class="btn btn-borda btn-pequeno">' + (g.foto ? 'Trocar foto' : 'Adicionar foto') + '<input type="file" accept="image/*" hidden data-foto="' + p + '.foto" data-tipo="presente"></label>' +
+      (g.foto ? '<button type="button" class="btn-link" data-act="tirar-foto-presente" data-p="' + p + '.foto">Remover</button>' : '') + '</div>' +
+      '<div class="linha-2"><div class="campo"><label for="pr-t' + i + '">Tamanho <span class="dica">(opcional)</span></label><input id="pr-t' + i + '" type="text" maxlength="20" data-b="' + p + '.tamanho" value="' + esc(g.tamanho || '') + '" placeholder="Ex.: M, 38"></div>' +
+      '<div class="campo"><label for="pr-l' + i + '">Link ou loja <span class="dica">(opcional)</span></label><input id="pr-l' + i + '" type="text" maxlength="300" data-b="' + p + '.link" value="' + esc(g.link || '') + '" placeholder="Ex.: https://loja.com/produto"></div></div></div>';
+  }).join('');
+}
+
+function telaCadastro() {
+  var c = S.cad, d = c;
+  var passos = '<div class="passos" aria-hidden="true">' + [1, 2, 3, 4].map(function (n) { return '<i class="' + (n <= c.step ? 'feito' : '') + '"></i>'; }).join('') + '</div>';
+  var miolo = '';
+  if (c.step === 1) {
+    miolo = '<h2>Seu cadastro</h2><p class="suave">Leva um minuto. Passo 1 de 4.</p>' + passos + blocoFoto('cad', d, 'Sua foto') +
+      '<div class="campo"><label for="c-nome">Nome</label><input id="c-nome" type="text" maxlength="60" autocomplete="name" data-b="cad.nome" value="' + esc(d.nome) + '"></div>' +
+      '<div class="campo"><label for="c-nasc">Aniversário</label><input id="c-nasc" type="date" data-b="cad.nascimento" value="' + esc(d.nascimento) + '"></div>' +
+      '<div class="campo"><label for="c-tel">Telefone com DDD</label><input id="c-tel" type="tel" autocomplete="tel" maxlength="25" data-b="cad.telefone" value="' + esc(d.telefone) + '" placeholder="(21) 99999-9999"></div>' +
+      '<div class="campo"><label for="c-mail">E-mail <span class="dica">(o aviso do sorteio chega aqui)</span></label><input id="c-mail" type="email" autocomplete="email" maxlength="120" data-b="cad.email" value="' + esc(d.email) + '"></div>' +
+      '<p class="erro" id="erro-cad" role="alert"></p><div class="acoes"><button class="btn btn-grande" data-act="cad-seguir">Continuar</button></div>';
+  } else if (c.step === 2) {
+    miolo = '<h2>Como você é?</h2><p class="suave">Quem tirar você vai usar isso para descrever você na brincadeira, sem entregar o segredo. Passo 2 de 4.</p>' + passos +
+      '<div class="upload-foto"><div class="circulo"><img src="' + esc(d.foto) + '" alt="Sua foto"></div><p class="suave" style="margin:0;max-width:26ch">Olhe sua foto e marque o que combina com você.</p></div>' +
+      blocoTracos('cad.tracos', d.tracos) +
+      '<div class="acoes"><button class="btn btn-borda" data-act="cad-voltar">Voltar</button><button class="btn btn-grande" data-act="cad-seguir">Continuar</button></div>' +
+      '<p style="margin-top:14px"><button class="btn-link suave" data-act="cad-seguir">Pular e fazer depois</button></p>';
+  } else if (c.step === 3) {
+    miolo = '<h2>O que você gostaria de ganhar?</h2><p class="suave">Até 3 ideias para ajudar quem tirar você. Pode deixar para depois e editar quando quiser. Passo 3 de 4.</p>' + passos +
+      blocoPresentes('cad.presentes', d.presentes) +
+      '<div class="acoes" style="margin-top:14px"><button class="btn btn-borda" data-act="cad-voltar">Voltar</button><button class="btn btn-grande" data-act="cad-seguir">Continuar</button></div>' +
+      '<p style="margin-top:14px"><button class="btn-link suave" data-act="cad-seguir">Deixar para depois</button></p>';
+  } else {
+    var valor = S.pub.config.valorSugerido;
+    miolo = '<h2>Termo de compromisso</h2><p class="suave">Opcional, mas leve a sério. Passo 4 de 4.</p>' + passos +
+      '<div class="termo"><b>Eu, ' + esc(d.nome || 'participante') + ', juro por todas as renas do Papai Noel que:</b><ul>' +
+      '<li>guardarei o segredo até a noite de Natal;</li><li>não vou espiar o link de ninguém;</li>' +
+      '<li>comprarei um presente com carinho' + (valor ? ', dentro do valor combinado (' + esc(valor) + ')' : '') + ';</li>' +
+      '<li>sei que o sorteio é incorruptível: nem suborno funciona.</li></ul></div>' +
+      '<span class="rotulo">Assine ou faça um desenho</span>' + padHtml('cad.assinatura') +
+      '<p class="erro" id="erro-cad" role="alert"></p><div class="acoes" style="margin-top:14px"><button class="btn btn-borda" data-act="cad-voltar">Voltar</button><button class="btn btn-grande" data-act="cad-enviar">Concluir cadastro</button></div>' +
+      '<p style="margin-top:14px"><button class="btn-link suave" data-act="cad-enviar-sem">Concluir sem assinar</button></p>';
+  }
+  return '<div class="barra">' + luzes() + '<div class="barra-linha"><div class="quem"><b>' + esc(S.pub.config.titulo) + '</b></div><button class="btn btn-pequeno btn-lampada" data-act="home">Cancelar</button></div></div>' +
+    '<main class="pagina"><section>' + miolo + '</section></main>';
+}
+
+/* ---- área pessoal ---- */
+function listaPresentesAmigo(presentes) {
+  if (!presentes.length) return '<p class="suave">Seu amigo oculto ainda não indicou presentes. Volte aqui mais tarde, ele pode preencher até a festa.</p>';
+  return '<div class="presentes-lista">' + presentes.map(function (g) {
+    return '<div class="presente">' + (g.foto ? '<img class="miniatura" src="' + esc(g.foto) + '" alt="' + esc(g.nome) + '">' : '<div class="sem-foto">Sem foto</div>') +
+      '<div><h3>' + esc(g.nome) + '</h3>' + (g.tamanho ? '<p class="suave" style="margin:0">Tamanho: ' + esc(g.tamanho) + '</p>' : '') +
+      (g.link ? '<a class="btn btn-borda btn-pequeno" style="margin-top:6px" target="_blank" rel="noopener noreferrer" href="' + esc(g.link) + '">Ver na loja</a>' : '') + '</div></div>';
+  }).join('') + '</div>';
+}
+
+function abaAmigo() {
+  var e = S.eu, c = e.config, nome = primeiroNome(e.eu.nome), h = '';
+  if (S.boasVindas) {
+    h += '<div class="aviso-topo">Cadastro feito! Enviamos um e-mail com seu link pessoal. Guarde esse e-mail para voltar aqui depois.</div>';
+  }
+  if (c.fase === 'inscricoes' || c.fase === 'aguardando') {
+    var dias = diasAte(c.dataSorteio);
+    h += '<section><h2>Oi, ' + esc(nome) + '</h2><div class="contagem">' +
+      (c.fase === 'inscricoes'
+        ? '<div class="numero">' + e.participantes.length + '</div><p>' + (e.participantes.length === 1 ? 'pessoa cadastrada. Chame a família!' : 'pessoas cadastradas. Estamos esperando todo mundo entrar.') + '</p>'
+        : '<div class="numero">' + (dias > 0 ? dias : 0) + '</div><p>' + (dias > 1 ? 'dias para o sorteio, em ' : dias === 1 ? 'dia para o sorteio, em ' : 'O sorteio é em ') + esc(AO.fmtBR(c.dataSorteio)) + '. Você receberá um e-mail.</p>') +
+      '</div><p>Até lá, deixe seu perfil e seus presentes em dia. Quem tirar você vai usar essas informações.</p>' +
+      '<div class="acoes"><button class="btn" data-act="aba" data-v="presentes">Escolher meus presentes</button><button class="btn btn-borda" data-act="aba" data-v="perfil">Revisar meu perfil</button></div></section>';
+    h += '<section><h2>Quem já entrou</h2><div class="grade-pessoas">' + e.participantes.map(function (p) {
+      return '<div class="pessoa"><img src="' + esc(p.foto) + '" alt="">' + esc(primeiroNome(p.nome)) + '</div>';
+    }).join('') + '</div></section>';
+    return h;
+  }
+  var a = e.amigo;
+  if (!a) return h + '<section><h2>Algo saiu do esperado</h2><p>Não encontramos seu amigo oculto. Fale com o organizador.</p></section>';
+  var aberto = lsGet('ao_rev_' + S.token) === '1';
+  h += '<section><h2>Seu amigo oculto</h2><div class="etiqueta-area"><div class="barbante"></div>';
+  if (!aberto) {
+    h += '<div class="sombra"><div class="etiqueta"><div class="misterio">?</div><p class="fechada-texto">Tem alguém esperando por você</p><p class="suave">Confira se ninguém está olhando a sua tela.</p>' +
+      '<button class="btn btn-grande" data-act="revelar">Abrir a etiqueta</button></div></div>';
+  } else {
+    h += '<div class="sombra"><div class="etiqueta' + (S.acabouDeAbrir ? ' balanca' : '') + '"><img class="foto-amigo" src="' + esc(a.foto) + '" alt="Foto de ' + esc(a.nome) + '"><h2>' + esc(a.nome) + '</h2>' +
+      '<p class="suave" style="margin:6px 0 0">Aniversário em ' + esc(AO.fmtDM(a.nascimento)) + '</p>' +
+      (a.frases.length ? '<div class="tracos">' + a.frases.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '<p class="suave" style="margin-top:12px">Ainda não descreveu como é.</p>') + '</div></div>';
+  }
+  h += '</div>';
+  if (aberto) {
+    h += '<p style="text-align:center"><button class="btn btn-borda btn-pequeno" data-act="dicas">Sortear dicas para a brincadeira</button></p>';
+    if (S.dicas) h += '<div class="caixa-dicas"><b>Descreva sem entregar o segredo:</b><ul>' + S.dicas.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>';
+    S.acabouDeAbrir = false;
+  }
+  h += '</section>';
+  if (aberto) h += '<section><h2>O que ' + esc(primeiroNome(a.nome)) + ' gostaria de ganhar</h2>' + (c.valorSugerido ? '<p class="suave">Valor combinado: ' + esc(c.valorSugerido) + '</p>' : '') + listaPresentesAmigo(a.presentes) + '</section>';
+  return h;
+}
+
+function abaPresentes() {
+  return '<section><h2>Meus presentes</h2><p class="suave">Até 3 opções para quem tirar você. Pode mudar quando quiser, até a festa.</p>' +
+    blocoPresentes('ed.presentes', S.ed.presentes) +
+    '<div class="acoes" style="margin-top:14px"><button class="btn btn-grande" data-act="salvar-presentes">Salvar meus presentes</button></div></section>';
+}
+
+function abaPerfil() {
+  var p = S.ed.perfil;
+  return '<section><h2>Meu perfil</h2>' + blocoFoto('ed.perfil', p, 'Sua foto') +
+    '<div class="campo"><label for="e-nome">Nome</label><input id="e-nome" type="text" maxlength="60" data-b="ed.perfil.nome" value="' + esc(p.nome) + '"></div>' +
+    '<div class="linha-2"><div class="campo"><label for="e-nasc">Aniversário</label><input id="e-nasc" type="date" data-b="ed.perfil.nascimento" value="' + esc(p.nascimento) + '"></div>' +
+    '<div class="campo"><label for="e-tel">Telefone</label><input id="e-tel" type="tel" maxlength="25" data-b="ed.perfil.telefone" value="' + esc(p.telefone) + '"></div></div>' +
+    '<p class="suave">E-mail do cadastro: ' + esc(S.eu.eu.email) + '</p></section>' +
+    '<section><h2>Como eu sou</h2>' + blocoTracos('ed.perfil.tracos', p.tracos) +
+    '<h3 style="margin:10px 0 10px">Minha rubrica</h3><p class="suave" style="margin-top:0">Opcional. Assine ou desenhe como no termo de compromisso.</p>' + padHtml('ed.perfil.assinatura') +
+    '<div class="acoes" style="margin-top:18px"><button class="btn btn-grande" data-act="salvar-perfil">Salvar perfil</button></div></section>' +
+    '<section><button class="btn-link" data-act="sair">Sair deste aparelho</button></section>';
+}
+
+function abaFesta() {
+  var c = S.eu.config, ev = c.evento;
+  var mapa = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.endereco);
+  return '<section><h2>A festa</h2><div class="contagem"><div class="numero" style="font-size:2.4rem">' + esc(AO.fmtDM(ev.data)) + '</div><p style="font-size:1.1rem;color:#fff;font-weight:700">' + esc(AO.diaSemana(ev.data)) + ', às ' + esc(ev.hora) + '</p>' +
+    '<p>' + esc(ev.local) + '</p><p>' + esc(ev.endereco) + '</p></div>' +
+    '<div class="acoes"><a class="btn" target="_blank" rel="noopener noreferrer" href="' + esc(mapa) + '">Abrir no mapa</a><button class="btn btn-borda" data-act="agenda">Adicionar à agenda</button></div>' +
+    (c.valorSugerido ? '<p style="margin-top:16px">Valor combinado para o presente: <b>' + esc(c.valorSugerido) + '</b></p>' : '') + '</section>' +
+    (S.eu.participantes.some(function (p) { return p.assinatura; }) ? '<section><h2>Quem assinou o termo</h2><ul class="lista-simples">' + S.eu.participantes.filter(function (p) { return p.assinatura; }).map(function (p) {
+      return '<li><img src="' + esc(p.foto) + '" alt=""><span>' + esc(p.nome) + '</span><span class="fim"><img class="assinatura-mini" src="' + esc(p.assinatura) + '" alt="Rubrica de ' + esc(p.nome) + '"></span></li>';
+    }).join('') + '</ul></section>' : '') +
+    '<section><h2>Quem vai</h2><ul class="lista-simples">' + S.eu.participantes.map(function (p) {
+      return '<li><img src="' + esc(p.foto) + '" alt=""><span>' + esc(p.nome) + '</span><span class="fim">Aniversário ' + esc(AO.fmtDM(p.nascimento)) + '</span></li>';
+    }).join('') + '</ul></section>';
+}
+
+function abaJogos() {
+  var e = S.eu, h = '<section><h2>Brincadeiras</h2><div class="segmentos">' +
+    '<button class="chip" data-act="jogo" data-v="mural" aria-pressed="' + (S.jogo === 'mural') + '">Mural de pistas</button>' +
+    (e.config.modos.inimigo ? '<button class="chip" data-act="jogo" data-v="inimigo" aria-pressed="' + (S.jogo === 'inimigo') + '">Inimigo oculto</button>' : '') +
+    '<button class="chip" data-act="jogo" data-v="ranking" aria-pressed="' + (S.jogo === 'ranking') + '">Detetives</button></div>';
+  if (S.jogo === 'inimigo' && e.inimigo) {
+    var aberto = lsGet('ao_rev_ini_' + S.token) === '1';
+    h += aberto
+      ? '<div class="cartao-inimigo"><img src="' + esc(e.inimigo.pessoa.foto) + '" alt=""><h2>' + esc(e.inimigo.pessoa.nome) + '</h2><p style="color:#EFE5C2">é o seu inimigo oculto</p><div class="missao"><b>Sua missão</b><br>' + esc(e.inimigo.missao) + '</div></div><p class="suave" style="margin-top:12px">É tudo de brincadeira: nada de maldade. Na festa, cada um revela quem era o seu.</p>'
+      : '<div class="cartao-inimigo"><p style="font-family:var(--titulo);font-size:1.4rem;font-weight:700">Você também tem um inimigo oculto</p><p style="color:#EFE5C2">Ele não é o mesmo do seu amigo oculto. A missão é só provocação do bem.</p><button class="btn btn-lampada" data-act="revelar-inimigo">Revelar meu inimigo</button></div>';
+  } else if (S.jogo === 'ranking') {
+    var r = (S.mural && S.mural.ranking) || e.ranking;
+    h += '<p class="suave">Quem mais acertou sobre quem é o alvo de cada pista.</p>' + (r.length ? '<ul class="lista-simples">' + r.map(function (x, i) {
+      return '<li><b style="width:1.4em">' + (i + 1) + '</b><img src="' + esc(x.pessoa.foto) + '" alt=""><span>' + esc(x.pessoa.nome) + '</span><span class="fim"><b>' + x.pontos + '</b> ' + (x.pontos === 1 ? 'acerto' : 'acertos') + '</span></li>';
+    }).join('') + '</ul>' : '<p>Ninguém pontuou ainda. Vá ao mural e dê seus palpites.</p>');
+  } else {
+    h += muralHtml();
+  }
+  return h + '</section>';
+}
+
+function muralHtml() {
+  var e = S.eu, m = S.mural, h = '';
+  h += '<div class="campo"><label for="pista-txt">Poste uma pista sobre o seu amigo oculto</label><textarea id="pista-txt" maxlength="140" placeholder="Sem dar o nome nem entregar demais"></textarea>' +
+    '<p class="dica suave" id="dica-despiste" style="margin-top:6px">' + (S.despiste ? 'Esta pista descreve ' + esc(S.despiste.nome) + ', não o seu amigo. Ninguém vai saber qual pista é verdadeira.' : 'Você pode postar até ' + e.maxPistas + ' pistas (' + e.minhasPistas + ' postadas).') + '</p></div>' +
+    '<div class="acoes" style="margin-bottom:22px"><button class="btn" data-act="postar-pista">Postar pista</button><button class="btn btn-borda btn-pequeno" data-act="usar-traco">Usar uma característica do meu amigo</button><button class="btn btn-borda btn-pequeno" data-act="despiste">Criar pista de despiste</button></div>';
+  if (!m) return h + '<p class="suave">Carregando o mural...</p>';
+  if (!m.pistas.length) return h + '<p>O mural ainda está vazio. Seja o primeiro a postar uma pista.</p>';
+  var outros = e.participantes.filter(function (p) { return p.id !== e.eu.id; });
+  h += '<h3 style="margin:8px 0 12px">Pistas dos participantes</h3>';
+  h += m.pistas.map(function (p) {
+    var sus = p.minha ? '' : '<div class="suspeitos"><span style="background:none;padding:0;font-weight:500">Escrita por um destes:</span>' + p.suspeitos.map(function (s) { return '<span><img src="' + esc(s.foto) + '" alt="">' + esc(primeiroNome(s.nome)) + '</span>'; }).join('') + '</div>';
+    var acao = '';
+    if (p.minha) acao = '<p class="suave" style="margin:0">Sua pista' + (p.alvo ? ', sobre ' + esc(p.alvo.nome) : '') + '.</p>';
+    else if (p.palpite) acao = '<p class="' + (p.palpite.acertou ? 'resultado-certo' : 'resultado-errado') + '" style="margin:0">' + (p.palpite.acertou ? 'Você acertou!' : 'Não foi dessa vez.') + '</p>';
+    else acao = '<div class="palpite"><label class="oculto" for="sel-' + p.id + '">Sobre quem é?</label><select id="sel-' + p.id + '"><option value="">Sobre quem é?</option>' + outros.map(function (o) { return '<option value="' + esc(o.id) + '">' + esc(o.nome) + '</option>'; }).join('') + '</select><button class="btn btn-pequeno" data-act="palpitar" data-id="' + esc(p.id) + '">Palpitar</button></div>';
+    var rev = (!p.minha && p.autor) ? '<p style="margin:10px 0 0;font-weight:700">Revelação: escrita por ' + esc(p.autor.nome) + ', sobre ' + esc(p.alvo.nome) + '.</p>' : '';
+    return '<div class="pista"><p class="texto">' + esc(p.texto) + '</p>' + sus + acao + rev + '</div>';
+  }).join('');
+  return h;
+}
+
+function telaEu() {
+  var e = S.eu, c = e.config, jogos = !!e.amigo;
+  var abas = [['amigo', jogos ? 'Meu amigo' : 'Início'], ['presentes', 'Presentes']];
+  if (jogos) abas.push(['jogos', 'Brincadeiras']);
+  abas.push(['festa', 'Festa'], ['perfil', 'Perfil']);
+  var corpo = S.tab === 'presentes' ? abaPresentes() : S.tab === 'perfil' ? abaPerfil() : S.tab === 'festa' ? abaFesta() : S.tab === 'jogos' && jogos ? abaJogos() : abaAmigo();
+  return (S.demoBanner || '') + '<div class="barra">' + luzes() + '<div class="barra-linha"><img class="foto-mini" src="' + esc(e.eu.foto) + '" alt=""><div class="quem"><b>' + esc(primeiroNome(e.eu.nome)) + '</b><span>' + esc(c.titulo) + '</span></div></div></div>' +
+    '<main class="pagina">' + corpo + '</main>' +
+    '<nav class="nav" aria-label="Seções"><div class="nav-linha">' + abas.map(function (a) { return '<button data-act="aba" data-v="' + a[0] + '" aria-current="' + (S.tab === a[0]) + '">' + a[1] + '</button>'; }).join('') + '</div></nav>';
+}
+
+/* ---- organizador ---- */
+function telaAdmin() {
+  var A = S.adm, topo = '<div class="barra">' + luzes() + '<div class="barra-linha"><div class="quem"><b>Painel do organizador</b></div><button class="btn btn-pequeno btn-lampada" data-act="home">Sair</button></div></div>';
+  if (!A.dados) {
+    var criar = A.temPin === false;
+    return (S.demoBanner || '') + topo + '<main class="pagina"><section><h2>' + (criar ? 'Crie a senha do organizador' : 'Entrar como organizador') + '</h2>' +
+      '<p class="suave">' + (criar ? 'Use pelo menos 6 caracteres. Só você precisa dela.' : 'Digite a senha criada no primeiro acesso.') + '</p>' +
+      '<form id="form-admin"><div class="campo"><label for="adm-pin">Senha</label><input id="adm-pin" type="password" autocomplete="' + (criar ? 'new-password' : 'current-password') + '"></div>' +
+      '<p class="erro" id="erro-adm" role="alert"></p><button class="btn btn-grande" type="submit">' + (criar ? 'Criar senha e entrar' : 'Entrar') + '</button></form></section></main>';
+  }
+  var d = A.dados, abas = [['painel', 'Painel'], ['pessoas', 'Participantes'], ['config', 'Configurações'], ['festa', 'Festa']];
+  if (!API_URL) abas.push(['demo', 'Demonstração']);
+  var corpo = A.aba === 'pessoas' ? admPessoas() : A.aba === 'config' ? admConfig() : A.aba === 'festa' ? admFesta() : A.aba === 'demo' ? admDemo() : admPainel();
+  return (S.demoBanner || '') + topo + '<main class="pagina"><div class="painel-aba">' + abas.map(function (a) { return '<button data-act="adm-aba" data-v="' + a[0] + '" aria-current="' + (A.aba === a[0]) + '">' + a[1] + '</button>'; }).join('') + '</div>' + corpo + '</main>';
+}
+
+function admPainel() {
+  var d = S.adm.dados, c = d.config, n = d.pessoas.length;
+  var semPres = d.pessoas.filter(function (p) { return !p.presentes; }).length, semTr = d.pessoas.filter(function (p) { return !p.tracos; }).length;
+  var h = '<section>';
+  h += '<div class="etapa ' + (c.fase !== 'inscricoes' ? 'feita' : '') + '"><div class="marca">1</div><div><h3>Inscrições</h3><p style="margin:0">' + n + (n === 1 ? ' pessoa cadastrada.' : ' pessoas cadastradas.') + (c.fase === 'inscricoes' ? ' As inscrições estão abertas.' : ' Inscrições encerradas.') + '</p>' +
+    (!c.appUrl ? '<p style="margin:6px 0 0"><span class="tag-status falta">Falta definir o endereço do app em Configurações</span></p>' : '') +
+    '<div class="acoes">' + (c.fase === 'inscricoes'
+      ? '<button class="btn" data-act="adm-avisar"' + (n < 3 ? ' disabled' : '') + '>Encerrar inscrições e avisar todos</button>'
+      : (!d.sorteado ? '<button class="btn btn-borda" data-act="adm-reabrir">Reabrir inscrições</button>' : '')) + '</div>' + (n < 3 ? '<p class="suave" style="margin:8px 0 0">São necessárias pelo menos 3 pessoas.</p>' : '') + '</div></div>';
+  h += '<div class="etapa ' + (d.sorteado ? 'feita' : '') + '"><div class="marca">2</div><div><h3>Sorteio</h3><p style="margin:0">' + (d.sorteado ? 'Sorteio realizado. Ninguém, nem você, consegue escolher ou ver quem tirou quem.' : 'Marcado para ' + esc(dataLonga(c.dataSorteio)) + '. O sorteio é aleatório: ninguém tira a si mesmo, ninguém é tirado duas vezes, e não há como escolher nomes.') + '</p>' +
+    '<div class="acoes">' + (!d.sorteado ? '<button class="btn" data-act="adm-sortear"' + (n < 3 ? ' disabled' : '') + '>Sortear agora</button>' : '<button class="btn btn-perigo btn-pequeno" data-act="adm-desfazer">Desfazer sorteio</button>') + '</div>' +
+    (!d.sorteado ? '<p class="suave" style="margin:8px 0 0">Para o sorteio acontecer sozinho na data, instale o sorteio automático (veja o LEIA-ME).</p>' : '') + '</div></div>';
+  h += '<div class="etapa"><div class="marca">3</div><div><h3>Brincadeiras</h3>' +
+    '<label class="interruptor"><input type="checkbox" data-act="adm-modo" data-modo="inimigo"' + (c.modos.inimigo ? ' checked' : '') + '><span><b>Inimigo oculto</b><br><span class="suave">Um segundo sorteio, com missões de provocação do bem. Nunca cai na mesma pessoa do amigo oculto.</span></span></label>' +
+    '<label class="interruptor"><input type="checkbox" data-act="adm-revelar"' + (d.revelado ? ' checked' : '') + '><span><b>Revelar autores e alvos do mural</b><br><span class="suave">Use na festa para mostrar quem escreveu cada pista.</span></span></label></div></div>';
+  h += '<div class="etapa"><div class="marca">4</div><div><h3>A festa</h3><p style="margin:0">Na noite de Natal, use o modo festa para o roubo de presentes.</p><div class="acoes"><button class="btn btn-borda" data-act="adm-aba" data-v="festa">Abrir modo festa</button></div>' +
+    (d.sorteado ? '<label class="interruptor" style="margin-top:14px"><input type="checkbox" data-act="adm-revelacao"' + (d.revelacao ? ' checked' : '') + '><span><b>Liberar a página de revelação</b><br><span class="suave">Depois da festa: mostra todos os pares (e os inimigos ocultos) em cartas que viram. Enquanto estiver desligado, ninguém vê nada.</span></span></label>' + (d.revelacao ? '<div class="acoes"><button class="btn btn-borda btn-pequeno" data-act="adm-copiar-revelacao">Copiar link da revelação</button></div>' : '') : '') + '</div></div>';
+  h += '</section>';
+  if (n && (semPres || semTr)) h += '<section><h3>Pendências dos participantes</h3><p>' + (semPres ? semPres + (semPres === 1 ? ' pessoa ainda não indicou presentes. ' : ' pessoas ainda não indicaram presentes. ') : '') + (semTr ? semTr + (semTr === 1 ? ' ainda não descreveu suas características.' : ' ainda não descreveram suas características.') : '') + ' Veja quem na aba Participantes.</p></section>';
+  return h;
+}
+
+function admPessoas() {
+  var d = S.adm.dados;
+  if (!d.pessoas.length) return '<section><h2>Participantes</h2><p>Ninguém se cadastrou ainda. Compartilhe o endereço do app com a família.</p></section>';
+  return '<section><h2>Participantes</h2>' + d.pessoas.map(function (p) {
+    var fone = digitos(p.telefone);
+    return '<div class="linha-pessoa"><img src="' + esc(p.foto) + '" alt=""><div><b>' + esc(p.nome) + '</b>' +
+      '<div class="meta">' + esc(p.email) + '<br>' + esc(p.telefone) + '</div>' +
+      '<div style="margin-top:6px"><span class="tag-status ' + (p.presentes ? 'ok' : 'falta') + '">' + p.presentes + '/3 presentes</span> <span class="tag-status ' + (p.tracos ? 'ok' : 'falta') + '">' + (p.tracos ? 'com características' : 'sem características') + '</span>' + (p.assinou ? ' <span class="tag-status ok">assinou o termo</span>' : '') + '</div>' +
+      '<div class="acoes"><button class="btn btn-borda btn-pequeno" data-act="adm-zap" data-id="' + esc(p.id) + '"' + (fone.length < 8 ? ' disabled' : '') + '>Enviar link no WhatsApp</button>' +
+      '<button class="btn btn-borda btn-pequeno" data-act="adm-reenviar" data-id="' + esc(p.id) + '">Reenviar por e-mail</button>' +
+      '<button class="btn btn-borda btn-pequeno" data-act="adm-copiar" data-id="' + esc(p.id) + '">Copiar link</button>' +
+      (!d.sorteado ? '<button class="btn btn-perigo btn-pequeno" data-act="adm-remover" data-id="' + esc(p.id) + '">Remover</button>' : '') + '</div></div></div>';
+  }).join('') + '</section>';
+}
+
+function admConfig() {
+  var f = S.adm.cfg;
+  return '<section><h2>Configurações</h2>' +
+    '<div class="campo"><label for="f-titulo">Título</label><input id="f-titulo" type="text" maxlength="80" data-b="adm.cfg.titulo" value="' + esc(f.titulo) + '"></div>' +
+    '<div class="campo"><label for="f-sauda">Saudação da tela de abertura</label><textarea id="f-sauda" maxlength="300" data-b="adm.cfg.saudacao">' + esc(f.saudacao) + '</textarea></div>' +
+    '<div class="campo"><label for="f-nota">Recado em letra pequena sobre a foto <span class="dica">(deixe vazio para não mostrar)</span></label><textarea id="f-nota" maxlength="200" data-b="adm.cfg.notaFoto">' + esc(f.notaFoto) + '</textarea></div>' +
+    '<div class="campo"><label>Foto da tela de abertura <span class="dica">(a foto da família já vem de padrão)</span></label><div class="foto-presente"><div class="quadro" style="width:96px;height:96px">' + '<img src="' + esc(f.capa || HERO) + '" alt="">' + '</div>' +
+    '<label class="btn btn-borda btn-pequeno">Escolher foto<input type="file" accept="image/*" hidden data-foto="adm.cfg.capa" data-tipo="capa"></label>' + (f.capa ? '<button class="btn-link" data-act="tirar-capa">Voltar para a foto da família</button>' : '') + '</div></div>' +
+    '<div class="linha-2"><div class="campo"><label for="f-org">Organizador</label><input id="f-org" type="text" maxlength="40" data-b="adm.cfg.organizador" value="' + esc(f.organizador) + '"></div>' +
+    '<div class="campo"><label for="f-ds">Data do sorteio</label><input id="f-ds" type="date" data-b="adm.cfg.dataSorteio" value="' + esc(f.dataSorteio) + '"></div></div>' +
+    '<h3 style="margin:22px 0 12px">A festa</h3><div class="linha-2"><div class="campo"><label for="f-ed">Data</label><input id="f-ed" type="date" data-b="adm.cfg.evento.data" value="' + esc(f.evento.data) + '"></div>' +
+    '<div class="campo"><label for="f-eh">Hora</label><input id="f-eh" type="time" data-b="adm.cfg.evento.hora" value="' + esc(f.evento.hora) + '"></div></div>' +
+    '<div class="campo"><label for="f-el">Local</label><input id="f-el" type="text" maxlength="80" data-b="adm.cfg.evento.local" value="' + esc(f.evento.local) + '"></div>' +
+    '<div class="campo"><label for="f-ee">Endereço</label><input id="f-ee" type="text" maxlength="200" data-b="adm.cfg.evento.endereco" value="' + esc(f.evento.endereco) + '"></div>' +
+    '<div class="campo"><label for="f-vs">Valor combinado para o presente <span class="dica">(opcional)</span></label><input id="f-vs" type="text" maxlength="40" data-b="adm.cfg.valorSugerido" value="' + esc(f.valorSugerido) + '" placeholder="Ex.: R$ 80"></div>' +
+    '<h3 style="margin:22px 0 12px">Endereço do app</h3><div class="campo"><label for="f-url">Endereço onde o app está publicado <span class="dica">(vai nos links dos e-mails)</span></label><input id="f-url" type="url" maxlength="300" data-b="adm.cfg.appUrl" value="' + esc(f.appUrl) + '" placeholder="https://seu-usuario.github.io/amigo-oculto/"></div>' +
+    '<p><button class="btn btn-borda btn-pequeno" data-act="adm-usar-url">Usar o endereço desta página</button></p>' +
+    '<div class="acoes" style="margin-top:18px"><button class="btn btn-grande" data-act="adm-salvar-config">Salvar configurações</button></div></section>';
+}
+
+function admFesta() {
+  var d = S.adm.dados, r = d.roubo, nomeDe = function (id) { var p = d.pessoas.filter(function (x) { return x.id === id; })[0]; return p ? p : { nome: '?', foto: '' }; };
+  if (!r) {
+    return '<section><h2>Roubo de presentes</h2><p>Cada pessoa leva um presente embrulhado. Você numera os embrulhos e usa esta tela na festa.</p>' +
+      '<ul><li>Na sua vez, a pessoa abre um presente novo ou rouba um já aberto.</li><li>Quem foi roubado joga em seguida.</li><li>Cada presente pode ser roubado até 2 vezes, depois fica travado.</li><li>Não vale roubar de volta na mesma jogada.</li></ul>' +
+      '<div class="acoes"><button class="btn btn-grande" data-act="adm-roubo-iniciar"' + (d.pessoas.length < 2 ? ' disabled' : '') + '>Sortear a ordem e começar</button></div></section>';
+  }
+  var vez = r.vezId ? nomeDe(r.vezId) : null, faltam = r.fila.length;
+  var h = '<section><h2>Roubo de presentes</h2>';
+  h += r.fim ? '<div class="vez"><b>Fim de jogo</b></div>' : '<div class="vez"><img src="' + esc(vez.foto) + '" alt=""><div>É a vez de<b>' + esc(vez.nome) + '</b></div></div><p class="suave" style="margin-top:8px">' + (faltam ? faltam + (faltam === 1 ? ' pessoa ainda não jogou.' : ' pessoas ainda não jogaram.') : 'Última jogada da rodada.') + '</p>';
+  h += '<div class="tabuleiro">' + r.presentes.map(function (g) {
+    var travado = g.roubos >= r.maxRoubos, dono = g.dono ? nomeDe(g.dono) : null;
+    if (!g.dono) return '<div class="tile fechado"><span class="num">' + g.num + '</span><span>Embrulho fechado</span>' + (!r.fim ? '<button class="btn btn-lampada btn-pequeno" data-act="adm-roubo-abrir" data-n="' + g.num + '">Abrir</button>' : '') + '</div>';
+    var pode = !r.fim && g.dono !== r.vezId && !travado && r.proibido !== g.num;
+    return '<div class="tile' + (travado ? ' travado' : '') + '"><span class="num">' + g.num + '</span><b>' + esc(g.descricao) + '</b><span class="suave">Com ' + esc(primeiroNome(dono.nome)) + '</span>' +
+      '<span class="tag-status">' + (travado ? 'Travado' : 'Roubado ' + g.roubos + 'x') + '</span>' + (!r.fim ? '<button class="btn btn-pequeno" data-act="adm-roubo-roubar" data-n="' + g.num + '"' + (pode ? '' : ' disabled') + '>Roubar</button>' : '') + '</div>';
+  }).join('') + '</div>';
+  if (r.log.length) h += '<h3 style="margin:18px 0 8px">O que aconteceu</h3><ul class="lista-simples">' + r.log.slice(0, 12).map(function (l) { return '<li><span>' + esc(l) + '</span></li>'; }).join('') + '</ul>';
+  h += '<div class="acoes" style="margin-top:18px">' + (!r.fim ? '<button class="btn btn-borda btn-pequeno" data-act="adm-roubo-encerrar">Encerrar o jogo agora</button>' : '') + '<button class="btn btn-perigo btn-pequeno" data-act="adm-roubo-reiniciar">Recomeçar do zero</button></div></section>';
+  return h;
+}
+
+function admDemo() {
+  var mails = demoEmails();
+  return '<section><h2>Modo demonstração</h2><p>Os dados ficam só neste navegador e nenhum e-mail é enviado de verdade. Para valer, publique o backend e cole o endereço dele em <b>API_URL</b> no topo do arquivo (veja o LEIA-ME).</p>' +
+    '<div class="acoes"><button class="btn" data-act="demo-semear">Preencher com 7 participantes de exemplo</button><button class="btn btn-perigo btn-pequeno" data-act="demo-zerar">Zerar tudo</button></div></section>' +
+    '<section><h3 style="margin-bottom:10px">E-mails que teriam sido enviados</h3>' + (mails.length ? mails.map(function (m) {
+      return '<details class="email-demo"><summary>' + esc(m.subject) + ' (para ' + esc(m.to) + ')</summary><div class="corpo">' + m.html + '</div></details>';
+    }).join('') : '<p class="suave">Nenhum e-mail ainda.</p>') + '</section>';
+}
+
+/* ---------------- molduras de Natal ---------------- */
+var IMGS = {};
+function carregarImg(url, cb) {
+  var im = IMGS[url];
+  if (im && im.complete && im.naturalWidth) { cb(im); return; }
+  if (!im) {
+    im = new Image(); im._cbs = []; IMGS[url] = im;
+    im.onload = function () { var l = im._cbs; im._cbs = []; l.forEach(function (f) { f(im); }); };
+    im.src = url;
+  }
+  im._cbs.push(cb);
+}
+
+function rr(g, x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+
+// Tudo é desenhado dentro do círculo, porque os avatares do app são redondos.
+function desenharMoldura(g, tipo, S) {
+  var c = S / 2, TAU = Math.PI * 2;
+  g.save();
+  if (tipo === 'gorro') {
+    g.translate(S * 0.5, S * 0.27); g.rotate(-0.22);
+    g.fillStyle = '#B9522E'; g.beginPath(); g.moveTo(-S * 0.30, S * 0.08);
+    g.quadraticCurveTo(-S * 0.20, -S * 0.15, S * 0.12, -S * 0.17); g.quadraticCurveTo(S * 0.28, -S * 0.08, S * 0.30, S * 0.08); g.closePath(); g.fill();
+    g.fillStyle = 'rgba(0,0,0,.12)'; g.beginPath(); g.moveTo(S * 0.12, -S * 0.17); g.quadraticCurveTo(S * 0.28, -S * 0.08, S * 0.30, S * 0.08); g.lineTo(S * 0.16, S * 0.08); g.closePath(); g.fill();
+    g.fillStyle = '#FFFFFF'; rr(g, -S * 0.34, S * 0.04, S * 0.68, S * 0.11, S * 0.055); g.fill();
+    g.beginPath(); g.arc(S * 0.12, -S * 0.18, S * 0.062, 0, TAU); g.fill();
+  } else if (tipo === 'luzes') {
+    var gr = g.createRadialGradient(c, c, S * 0.30, c, c, S * 0.5);
+    gr.addColorStop(0, 'rgba(15,32,22,0)'); gr.addColorStop(1, 'rgba(15,32,22,.55)'); g.fillStyle = gr; g.fillRect(0, 0, S, S);
+    g.strokeStyle = '#0F2016'; g.lineWidth = S * 0.012; g.beginPath(); g.arc(c, c, S * 0.455, 0, TAU); g.stroke();
+    var cores = ['#D2693A', '#FFC857', '#8DB86B', '#9CC77A'];
+    for (var i = 0; i < 18; i++) {
+      var a = i / 18 * TAU, x = c + Math.cos(a) * S * 0.455, y = c + Math.sin(a) * S * 0.455;
+      g.fillStyle = cores[i % 4]; g.shadowColor = cores[i % 4]; g.shadowBlur = S * 0.05;
+      g.beginPath(); g.arc(x, y, S * 0.036, 0, TAU); g.fill();
+    }
+  } else if (tipo === 'presente') {
+    g.lineWidth = S * 0.075; g.strokeStyle = '#B9522E'; g.beginPath(); g.arc(c, c, S * 0.462, 0, TAU); g.stroke();
+    g.lineWidth = S * 0.014; g.strokeStyle = '#FFC857'; g.beginPath(); g.arc(c, c, S * 0.462, 0, TAU); g.stroke();
+    g.fillStyle = '#FFC857'; g.strokeStyle = '#C98A12'; g.lineWidth = S * 0.008;
+    [-1, 1].forEach(function (s) {            // fitas caindo
+      g.save(); g.translate(c, S * 0.115); g.rotate(s * 0.38);
+      rr(g, -S * 0.024, 0, S * 0.048, S * 0.15, S * 0.011); g.fill(); g.stroke(); g.restore();
+    });
+    [-1, 1].forEach(function (s) {            // alças do laço, viradas para cima
+      g.save(); g.translate(c, S * 0.115); g.rotate(-s * 0.4);
+      g.beginPath(); g.ellipse(s * S * 0.08, 0, S * 0.072, S * 0.04, 0, 0, TAU); g.fill(); g.stroke();
+      g.restore();
+    });
+    g.beginPath(); g.arc(c, S * 0.118, S * 0.032, 0, TAU); g.fill(); g.stroke();
+  } else if (tipo === 'neve') {
+    g.fillStyle = 'rgba(156,199,122,.16)'; g.fillRect(0, 0, S, S);
+    g.fillStyle = '#FFFFFF'; g.beginPath(); g.moveTo(0, S); g.lineTo(0, S * 0.9);
+    for (var k = 0; k < 6; k++) g.quadraticCurveTo(S * (k + 0.5) / 6, S * (k % 2 ? 0.80 : 0.85), S * (k + 1) / 6, S * 0.9);
+    g.lineTo(S, S); g.closePath(); g.fill();
+    var seed = 7, rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    g.fillStyle = 'rgba(255,255,255,.92)';
+    for (var n = 0; n < 32; n++) {
+      var fx = rnd() * S, fy = rnd() * S * 0.85, dx = fx - c, dy = fy - c;
+      if (Math.sqrt(dx * dx + dy * dy) > S * 0.46) continue;
+      g.beginPath(); g.arc(fx, fy, S * (0.006 + rnd() * 0.012), 0, TAU); g.fill();
+    }
+    g.strokeStyle = 'rgba(255,255,255,.95)'; g.lineWidth = S * 0.022; g.beginPath(); g.arc(c, c, S * 0.485, 0, TAU); g.stroke();
+  }
+  g.restore();
+}
+
+function desenharMolduras() {
+  var cvs = document.querySelectorAll('canvas[data-moldura]');
+  for (var i = 0; i < cvs.length; i++) (function (cv) {
+    var obj = getPath(S, cv.dataset.moldura);
+    if (!obj || !obj.fotoBase) return;
+    carregarImg(obj.fotoBase, function (im) {
+      var g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height);
+      g.drawImage(im, 0, 0, cv.width, cv.height); desenharMoldura(g, cv.dataset.tipo, cv.width);
+    });
+  })(cvs[i]);
+}
+
+function aplicarMoldura(prefix) {
+  var obj = getPath(S, prefix);
+  if (!obj.fotoBase) return;
+  if (!obj.moldura || obj.moldura === 'nenhuma') { obj.foto = obj.fotoBase; render(); return; }
+  carregarImg(obj.fotoBase, function (im) {
+    var c = document.createElement('canvas'); c.width = c.height = 256;
+    var g = c.getContext('2d'); g.drawImage(im, 0, 0, 256, 256); desenharMoldura(g, obj.moldura, 256);
+    var q = 0.86, d = c.toDataURL('image/jpeg', q);
+    while (d.length > 50000 && q > 0.4) { q -= 0.08; d = c.toDataURL('image/jpeg', q); }
+    obj.foto = d; render();
+  });
+}
+
+/* ---------------- rubrica (assinar ou desenhar) ---------------- */
+function iniciarPads() {
+  var cvs = document.querySelectorAll('canvas[data-pad]');
+  for (var i = 0; i < cvs.length; i++) (function (cv) {
+    if (cv._pronto) return; cv._pronto = true;
+    var path = cv.dataset.pad, g = cv.getContext('2d'), desenhando = false, ultimo = null;
+    g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height);
+    g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 5; g.strokeStyle = '#1F3A2B';
+    var atual = getPath(S, path);
+    if (atual) { var im = new Image(); im.onload = function () { g.drawImage(im, 0, 0, cv.width, cv.height); }; im.src = atual; }
+    function pos(e) { var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; }
+    function salvar() {
+      var t = document.createElement('canvas'); t.width = 400; t.height = 147;
+      var tg = t.getContext('2d'); tg.fillStyle = '#fff'; tg.fillRect(0, 0, 400, 147); tg.drawImage(cv, 0, 0, 400, 147);
+      var d = t.toDataURL('image/png'); if (d.length > 55000) d = t.toDataURL('image/jpeg', 0.7);
+      setPath(S, path, d);
+    }
+    cv.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+      desenhando = true; ultimo = pos(e);
+      g.fillStyle = '#1F3A2B'; g.beginPath(); g.arc(ultimo.x, ultimo.y, 2.5, 0, 6.3); g.fill();
+    });
+    cv.addEventListener('pointermove', function (e) {
+      if (!desenhando) return; var p = pos(e);
+      g.beginPath(); g.moveTo(ultimo.x, ultimo.y); g.lineTo(p.x, p.y); g.stroke(); ultimo = p;
+    });
+    function fim() { if (!desenhando) return; desenhando = false; salvar(); }
+    cv.addEventListener('pointerup', fim); cv.addEventListener('pointercancel', fim); cv.addEventListener('pointerleave', fim);
+  })(cvs[i]);
+}
+
+/* ---------------- renderização ---------------- */
+var raiz = document.getElementById('app');
+function render() {
+  var y = window.scrollY, html;
+  S.demoBanner = API_URL ? '' : '<div class="faixa-demo">Modo demonstração: os dados ficam só neste navegador</div>';
+  if (S.view === 'carregando') html = '<div class="carregando">Pendurando as luzes...</div>';
+  else if (!S.pub) html = '<div class="carregando" style="padding:24px;text-align:center">Não consegui falar com o servidor.<br><button class="btn btn-lampada" style="margin-top:16px" data-act="recarregar">Tentar de novo</button></div>';
+  else if (S.view === 'cadastro') html = telaCadastro();
+  else if (S.view === 'eu' && S.eu) html = telaEu();
+  else if (S.view === 'admin') html = telaAdmin();
+  else if (S.view === 'revelacao' && S.rev) html = telaRevelacao();
+  else html = telaAbertura();
+  raiz.innerHTML = html;
+  desenharMolduras(); iniciarPads();
+  window.scrollTo(0, y);
+}
+function revChaves() { var R = S.rev, o = []; R.amigos.forEach(function (_, i) { o.push('a' + i); }); R.inimigos.forEach(function (_, i) { o.push('i' + i); }); return o; }
+function revFim() { return revChaves().every(function (k) { return S.rev.abertos[k]; }); }
+function irPara(v) { S.view = v; render(); window.scrollTo(0, 0); }
+
+/* ---------------- carregamento ---------------- */
+async function carregarPublico() { S.pub = await chamar('publico'); }
+async function carregarEu(token) {
+  S.eu = await chamar('eu', { token: token });
+  S.token = token; lsSet('ao_token', token);
+  S.ed = {
+    perfil: { fotoBase: '', moldura: 'nenhuma', assinatura: S.eu.eu.assinatura || '', nome: S.eu.eu.nome, foto: S.eu.eu.foto, nascimento: S.eu.eu.nascimento, telefone: S.eu.eu.telefone, tracos: JSON.parse(JSON.stringify(S.eu.eu.tracos || {})) },
+    presentes: [0, 1, 2].map(function (i) { var g = (S.eu.eu.presentes || [])[i]; return g ? { nome: g.nome, foto: g.foto, tamanho: g.tamanho, link: g.link } : { nome: '', foto: '', tamanho: '', link: '' }; })
+  };
+}
+async function carregarMural() { S.mural = await chamar('mural', { token: S.token }); }
+async function carregarAdmin() {
+  S.adm.dados = await chamar('adminDados', { pin: S.adm.pin });
+  S.adm.cfg = JSON.parse(JSON.stringify(S.adm.dados.config));
+}
+
+async function iniciar() {
+  var qs = new URLSearchParams(location.search);
+  var t = qs.get('t') || lsGet('ao_token') || '';
+  try { await carregarPublico(); } catch (e) { S.pub = null; S.erroInicial = e.message; }
+  S.view = 'abertura';
+  if (S.pub && qs.has('admin')) { await abrirAdmin(); return; }
+  if (S.pub && qs.has('revelacao')) {
+    try { S.rev = await chamar('revelacao'); S.rev.abertos = {}; S.view = 'revelacao'; render(); return; }
+    catch (e) { aviso(e.message, true); }
+  }
+  if (S.pub && t) {
+    try { await carregarEu(t); S.view = 'eu'; S.tab = 'amigo'; if (qs.get('t')) history.replaceState(null, '', location.pathname); }
+    catch (e) { lsSet('ao_token', ''); if (qs.get('t')) aviso(e.message, true); }
+  }
+  render();
+}
+
+async function abrirAdmin() {
+  var est = await chamar('adminEstado');
+  S.adm.temPin = est.temPin; S.adm.dados = null; S.adm.pin = '';
+  irPara('admin');
+}
+
+/* ---------------- ações ---------------- */
+function novoCad() { return { step: 1, nome: '', foto: '', fotoBase: '', moldura: 'nenhuma', assinatura: '', nascimento: '', telefone: '', email: '', tracos: {}, presentes: [0, 1, 2].map(function () { return { nome: '', foto: '', tamanho: '', link: '' }; }) }; }
+
+function validarPasso1() {
+  var c = S.cad;
+  if (!c.foto) return 'Escolha uma foto sua.';
+  if (c.nome.trim().length < 2) return 'Digite seu nome.';
+  if (!c.nascimento) return 'Informe seu aniversário.';
+  if (digitos(c.telefone).length < 8) return 'Informe um telefone com DDD.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email.trim())) return 'Informe um e-mail válido.';
+  return '';
+}
+
+function agendaIcs() {
+  var ev = S.eu.config.evento, d = ev.data.replace(/-/g, ''), hh = ev.hora.replace(':', '');
+  var fim = ('0' + Math.min(23, parseInt(ev.hora.slice(0, 2), 10) + 4)).slice(-2) + ev.hora.slice(3);
+  var ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Amigo Oculto//PT', 'BEGIN:VEVENT', 'UID:' + Date.now() + '@amigo-oculto',
+    'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', 'DTSTART:' + d + 'T' + hh + '00', 'DTEND:' + d + 'T' + fim.replace(':', '') + '00',
+    'SUMMARY:' + S.eu.config.titulo, 'LOCATION:' + (ev.local + ' - ' + ev.endereco).replace(/[,;]/g, ' '), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'amigo-oculto.ics';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+var ACOES = {
+  'ver-revelacao': async function () { await rodar(async function () { S.rev = await chamar('revelacao'); S.rev.abertos = {}; irPara('revelacao'); }); },
+  'rev-abrir': function (el) { S.rev.abertos[el.dataset.k] = 1; render(); if (revFim()) confete(); },
+  'rev-proximo': function () { var k = revChaves().filter(function (x) { return !S.rev.abertos[x]; })[0]; if (k) { S.rev.abertos[k] = 1; render(); if (revFim()) confete(); } },
+  'rev-todos': function () { revChaves().forEach(function (k) { S.rev.abertos[k] = 1; }); render(); confete(); },
+  'adm-revelacao': function (el) {
+    var v = el.checked;
+    return rodar(async function () { try { await chamar('adminRevelacao', { pin: S.adm.pin, valor: v }); aviso(v ? 'Página de revelação liberada.' : 'Página de revelação escondida.'); } finally { await carregarAdmin(); render(); } });
+  },
+  'adm-copiar-revelacao': function () {
+    var u = (S.adm.cfg && S.adm.cfg.appUrl ? S.adm.cfg.appUrl.split('?')[0] : location.origin + location.pathname) + '?revelacao';
+    if (navigator.clipboard) navigator.clipboard.writeText(u).then(function () { aviso('Link da revelação copiado.'); }, function () { aviso(u); }); else aviso(u);
+  },
+  recarregar: function () { location.reload(); },
+  home: function () { S.adm.dados = null; irPara('abertura'); },
+  cadastrar: function () { S.cad = novoCad(); irPara('cadastro'); },
+  entrar: async function () {
+    var email = await pedirTexto('Entrar no seu espaço', 'Digite o e-mail do cadastro e enviaremos seu link pessoal', 'email');
+    if (!email) return;
+    await rodar(async function () {
+      await chamar('reenviarLink', { email: email });
+      aviso('Se esse e-mail estiver cadastrado, o link chegou. Olhe também o spam.');
+    });
+  },
+  admin: function () { return rodar(abrirAdmin); },
+  'cad-seguir': function () {
+    if (S.cad.step === 1) { var e = validarPasso1(); if (e) { $('#erro-cad').textContent = e; return; } }
+    S.cad.step = Math.min(4, S.cad.step + 1); render(); window.scrollTo(0, 0);
+  },
+  'cad-voltar': function () { S.cad.step = Math.max(1, S.cad.step - 1); render(); window.scrollTo(0, 0); },
+  'cad-enviar-sem': function () { S.cad.assinatura = ''; return ACOES['cad-enviar'](); },
+  'cad-enviar': function () {
+    var c = S.cad, base = /^https?:/.test(location.href) ? location.origin + location.pathname : '';
+    return rodar(async function () {
+      var r = await chamar('cadastrar', { nome: c.nome, foto: c.foto, nascimento: c.nascimento, telefone: c.telefone, email: c.email, tracos: c.tracos,
+        presentes: c.presentes.filter(function (g) { return g.nome.trim(); }), assinatura: c.assinatura, baseUrl: base });
+      await carregarPublico(); await carregarEu(r.token);
+      S.boasVindas = true; S.tab = 'amigo'; S.cad = null; irPara('eu'); confete();
+    });
+  },
+  aba: function (el) {
+    S.tab = el.dataset.v; S.boasVindas = false;
+    if (S.tab === 'jogos') { render(); return rodar(async function () { await carregarMural(); render(); }); }
+    render(); window.scrollTo(0, 0);
+  },
+  jogo: function (el) { S.jogo = el.dataset.v; render(); },
+  revelar: function () { lsSet('ao_rev_' + S.token, '1'); S.acabouDeAbrir = true; render(); confete(); },
+  'revelar-inimigo': function () { lsSet('ao_rev_ini_' + S.token, '1'); render(); confete(); },
+  dicas: function () {
+    var f = S.eu.amigo.frases.slice();
+    S.dicas = f.length ? f.sort(function () { return Math.random() - .5; }).slice(0, 3) : ['Seu amigo oculto ainda não descreveu suas características. Use a conversa para descobrir.'];
+    render();
+  },
+  'salvar-presentes': function () {
+    return rodar(async function () { await chamar('salvarPerfil', { token: S.token, presentes: S.ed.presentes.filter(function (g) { return (g.nome || '').trim(); }) }); await carregarEu(S.token); render(); aviso('Presentes salvos.'); });
+  },
+  'salvar-perfil': function () {
+    return rodar(async function () { var pf = S.ed.perfil; await chamar('salvarPerfil', { token: S.token, perfil: { nome: pf.nome, foto: pf.foto, nascimento: pf.nascimento, telefone: pf.telefone, tracos: pf.tracos, assinatura: pf.assinatura } }); await carregarEu(S.token); render(); aviso('Perfil salvo.'); });
+  },
+  moldura: function (el) { var obj = getPath(S, el.dataset.p); obj.moldura = el.dataset.v; aplicarMoldura(el.dataset.p); },
+  'limpar-pad': function (el) {
+    var path = el.dataset.p; setPath(S, path, '');
+    var cv = document.querySelector('canvas[data-pad="' + path + '"]');
+    if (cv) { var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); }
+  },
+  'tirar-foto-presente': function (el) { setPath(S, el.dataset.p, ''); render(); },
+  sair: async function () {
+    if (await confirmar('Sair deste aparelho?', 'Você poderá entrar de novo pelo link do seu e-mail.', 'Sair')) { lsSet('ao_token', ''); S.eu = null; S.token = ''; irPara('abertura'); }
+  },
+  agenda: function () { agendaIcs(); },
+  'usar-traco': function () {
+    var f = S.eu.amigo.frases; if (!f.length) { aviso('Seu amigo oculto ainda não descreveu suas características.', true); return; }
+    S.despiste = null; $('#pista-txt').value = f[Math.floor(Math.random() * f.length)]; $('#dica-despiste').textContent = 'Pista pronta. Edite como quiser antes de postar.';
+  },
+  despiste: function () {
+    return rodar(async function () {
+      var r = await chamar('sugerirDespiste', { token: S.token });
+      S.despiste = { alvoId: r.alvoId, nome: r.nome, texto: r.texto };
+      $('#pista-txt').value = r.texto;
+      $('#dica-despiste').textContent = 'Esta pista descreve ' + r.nome + ', não o seu amigo. Ninguém vai saber qual pista é verdadeira.';
+    });
+  },
+  'postar-pista': function () {
+    var txt = $('#pista-txt').value;
+    return rodar(async function () {
+      var dp = S.despiste && S.despiste.texto === txt.trim() ? S.despiste : null;
+      await chamar('postarPista', { token: S.token, texto: txt, despiste: !!dp, alvoId: dp ? dp.alvoId : '' });
+      S.despiste = null; await carregarEu(S.token); await carregarMural(); render(); aviso('Pista postada.');
+    });
+  },
+  palpitar: function (el) {
+    var id = el.dataset.id, v = $('#sel-' + id).value;
+    if (!v) { aviso('Escolha uma pessoa antes de palpitar.', true); return; }
+    return rodar(async function () {
+      var r = await chamar('palpitar', { token: S.token, pistaId: id, escolhaId: v });
+      await carregarMural(); render(); if (r.acertou) { confete(); aviso('Acertou!'); } else aviso('Não foi dessa vez.', true);
+    });
+  },
+  /* organizador */
+  'adm-aba': function (el) { S.adm.aba = el.dataset.v; render(); window.scrollTo(0, 0); },
+  'adm-avisar': async function () {
+    if (!(await confirmar('Encerrar inscrições?', 'Todos os participantes receberão um e-mail com a data do sorteio e o link pessoal. Ninguém mais poderá se cadastrar.', 'Encerrar e avisar'))) return;
+    return rodar(async function () { var r = await chamar('adminAvisar', { pin: S.adm.pin }); await carregarAdmin(); render(); aviso(r.avisados + ' e-mails enviados.'); });
+  },
+  'adm-reabrir': function () { return rodar(async function () { await chamar('adminReabrir', { pin: S.adm.pin }); await carregarAdmin(); render(); aviso('Inscrições reabertas.'); }); },
+  'adm-sortear': async function () {
+    var d = S.adm.dados, falta = d.pessoas.filter(function (p) { return !p.presentes; }).length;
+    var msg = 'O resultado é secreto e definitivo. Todos receberão um e-mail com o link para descobrir quem tiraram.' + (falta ? ' ' + falta + (falta === 1 ? ' pessoa ainda não indicou presentes, mas poderá fazer isso depois.' : ' pessoas ainda não indicaram presentes, mas poderão fazer isso depois.') : '');
+    if (!(await confirmar('Sortear agora?', msg, 'Sortear'))) return;
+    return rodar(async function () { var r = await chamar('adminSortear', { pin: S.adm.pin }); await carregarAdmin(); render(); confete(); aviso('Sorteio feito. ' + r.sorteados + ' e-mails enviados.'); });
+  },
+  'adm-desfazer': async function () {
+    if (!(await confirmar('Desfazer o sorteio?', 'O resultado, as pistas do mural e o roubo de presentes serão apagados. Será preciso sortear de novo.', 'Desfazer', true))) return;
+    return rodar(async function () { await chamar('adminDesfazerSorteio', { pin: S.adm.pin }); await carregarAdmin(); render(); aviso('Sorteio desfeito.'); });
+  },
+  'adm-modo': function (el) {
+    var v = el.checked;
+    return rodar(async function () { await chamar('adminConfig', { pin: S.adm.pin, config: { modos: { inimigo: v } } }); await carregarAdmin(); render(); aviso(v ? 'Inimigo oculto ativado.' : 'Inimigo oculto desativado.'); });
+  },
+  'adm-revelar': function (el) {
+    var v = el.checked;
+    return rodar(async function () { await chamar('adminRevelar', { pin: S.adm.pin, valor: v }); await carregarAdmin(); render(); aviso(v ? 'Mural revelado.' : 'Mural voltou a esconder os autores.'); });
+  },
+  'adm-zap': function (el) {
+    var p = S.adm.dados.pessoas.filter(function (x) { return x.id === el.dataset.id; })[0], f = digitos(p.telefone);
+    if (f.length <= 11) f = '55' + f;
+    var msg = 'Oi, ' + primeiroNome(p.nome) + '! Seu link pessoal do ' + S.adm.dados.config.titulo + ': ' + p.link + '\nNão encaminhe para ninguém, ou a surpresa vai embora.';
+    if (!p.link) { aviso('Defina o endereço do app em Configurações primeiro.', true); return; }
+    window.open('https://wa.me/' + f + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  },
+  'adm-reenviar': function (el) { return rodar(async function () { await chamar('adminReenviar', { pin: S.adm.pin, id: el.dataset.id }); aviso('Link reenviado por e-mail.'); }); },
+  'adm-copiar': function (el) {
+    var p = S.adm.dados.pessoas.filter(function (x) { return x.id === el.dataset.id; })[0];
+    if (!p.link) { aviso('Defina o endereço do app em Configurações primeiro.', true); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(p.link).then(function () { aviso('Link copiado.'); }, function () { aviso(p.link); }); else aviso(p.link);
+  },
+  'adm-remover': async function (el) {
+    var p = S.adm.dados.pessoas.filter(function (x) { return x.id === el.dataset.id; })[0];
+    if (!(await confirmar('Remover ' + p.nome + '?', 'O cadastro será apagado.', 'Remover', true))) return;
+    return rodar(async function () { await chamar('adminRemover', { pin: S.adm.pin, id: el.dataset.id }); await carregarAdmin(); render(); aviso('Participante removido.'); });
+  },
+  'adm-usar-url': function () { S.adm.cfg.appUrl = location.origin + location.pathname; render(); },
+  'tirar-capa': function () { S.adm.cfg.capa = ''; render(); },
+  'adm-salvar-config': function () {
+    var f = S.adm.cfg;
+    return rodar(async function () {
+      await chamar('adminConfig', { pin: S.adm.pin, config: { titulo: f.titulo, saudacao: f.saudacao, notaFoto: f.notaFoto, organizador: f.organizador, dataSorteio: f.dataSorteio, valorSugerido: f.valorSugerido, appUrl: f.appUrl, capa: f.capa, evento: f.evento } });
+      await carregarPublico(); await carregarAdmin(); render(); aviso('Configurações salvas.');
+    });
+  },
+  'adm-roubo-iniciar': function () { return rodar(async function () { await chamar('adminRouboIniciar', { pin: S.adm.pin }); await carregarAdmin(); render(); }); },
+  'adm-roubo-abrir': async function (el) {
+    var n = el.dataset.n, desc = await pedirTexto('Abrindo o embrulho ' + n, 'O que veio dentro?', 'text');
+    if (desc === null) return;
+    return rodar(async function () { await chamar('adminRouboAgir', { pin: S.adm.pin, tipo: 'abrir', num: n, descricao: desc }); await carregarAdmin(); render(); });
+  },
+  'adm-roubo-roubar': function (el) { return rodar(async function () { await chamar('adminRouboAgir', { pin: S.adm.pin, tipo: 'roubar', num: el.dataset.n }); await carregarAdmin(); render(); }); },
+  'adm-roubo-encerrar': function () { return rodar(async function () { await chamar('adminRouboEncerrar', { pin: S.adm.pin }); await carregarAdmin(); render(); }); },
+  'adm-roubo-reiniciar': async function () {
+    if (!(await confirmar('Recomeçar o roubo de presentes?', 'O andamento atual será apagado.', 'Recomeçar', true))) return;
+    return rodar(async function () { await chamar('adminRouboReiniciar', { pin: S.adm.pin }); await carregarAdmin(); render(); });
+  },
+  'demo-semear': function () {
+    var s = demoLoad(); if (s.ordem.length) { aviso('Zere a demonstração antes de preencher com exemplos.', true); return; }
+    AO.semearDemo(s, demoCtx); demoSave(s);
+    return rodar(async function () { await carregarPublico(); await carregarAdmin(); render(); aviso('7 participantes de exemplo criados.'); });
+  },
+  'demo-zerar': async function () {
+    if (!(await confirmar('Zerar a demonstração?', 'Todos os dados deste navegador serão apagados.', 'Zerar', true))) return;
+    lsSet('ao_demo', ''); lsSet('ao_demo_mail', '[]'); lsSet('ao_token', ''); S.eu = null; S.token = '';
+    return rodar(async function () { await carregarPublico(); await abrirAdmin(); });
+  }
+};
+
+/* ---------------- eventos ---------------- */
+document.addEventListener('click', function (ev) {
+  var chip = ev.target.closest('[data-chip]');
+  if (chip) {
+    var obj = getPath(S, chip.dataset.chip), k = chip.dataset.k, v = chip.dataset.v;
+    if (obj[k] === v) delete obj[k]; else obj[k] = v;
+    var irmaos = chip.parentNode.querySelectorAll('[data-chip]');
+    for (var i = 0; i < irmaos.length; i++) irmaos[i].setAttribute('aria-pressed', String(obj[irmaos[i].dataset.k] === irmaos[i].dataset.v));
+    return;
+  }
+  var el = ev.target.closest('[data-act]');
+  if (!el || el.tagName === 'INPUT') return;
+  var fn = ACOES[el.dataset.act];
+  if (fn) { var r = fn(el); if (r && r.catch) r.catch(function (e) { aviso(e.message, true); }); }
+});
+
+document.addEventListener('change', async function (ev) {
+  var el = ev.target;
+  if (el.matches('input[type=checkbox][data-act]')) { var fn = ACOES[el.dataset.act]; if (fn) { var r = fn(el); if (r && r.catch) r.catch(function (e) { aviso(e.message, true); }); } return; }
+  if (el.matches('input[type=file][data-foto]')) {
+    var f = el.files && el.files[0]; if (!f) return;
+    try {
+      var url = await lerFoto(f, el.dataset.tipo);
+      if (el.dataset.tipo === 'avatar') { var pre = el.dataset.foto.replace(/\.foto$/, ''), ob = getPath(S, pre); ob.fotoBase = url; ob.moldura = 'nenhuma'; ob.foto = url; }
+      else setPath(S, el.dataset.foto, url);
+      render();
+    } catch (e) { aviso(e.message, true); }
+  }
+});
+
+document.addEventListener('input', function (ev) {
+  var el = ev.target;
+  if (el.dataset && el.dataset.b) setPath(S, el.dataset.b, el.value);
+});
+
+document.addEventListener('submit', function (ev) {
+  if (ev.target.id !== 'form-admin') return;
+  ev.preventDefault();
+  var pin = $('#adm-pin').value;
+  rodar(async function () {
+    if (S.adm.temPin === false) { await chamar('adminCriarPin', { pin: pin }); S.adm.temPin = true; }
+    S.adm.pin = pin;
+    try { await carregarAdmin(); } catch (e) { S.adm.pin = ''; $('#erro-adm').textContent = e.message; return; }
+    S.adm.aba = 'painel'; render();
+  });
+});
+
+iniciar();
+})();
+</script>
+</body>
+</html>
