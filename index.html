@@ -87,11 +87,12 @@ img{max-width:100%;display:block}
 .rodape-mini{position:relative;z-index:1;padding:12px 22px calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center;color:#CFC49B;font-size:.85rem;max-width:980px;width:100%;margin:0 auto}
 .rodape-mini .btn-link{color:#CFC49B;font-size:.85rem}
 @media(min-width:760px){
-  .cena{top:0;left:auto;right:0;width:72%;height:100%;aspect-ratio:auto;
-    -webkit-mask-image:linear-gradient(to right,transparent,#000 42%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 78%,transparent);
+  .cena{top:0;left:0;right:0;width:auto;height:100%;aspect-ratio:auto;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 80%,transparent);
     -webkit-mask-composite:source-in;
-    mask-image:linear-gradient(to right,transparent,#000 42%,#000 88%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 78%,transparent);mask-composite:intersect}
+    mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 11%,#000 80%,transparent);mask-composite:intersect}
   .cena img{object-position:50% 40%}
+  .cena::after{background:linear-gradient(90deg,rgba(31,58,43,.5),rgba(31,58,43,.18) 48%,rgba(31,58,43,0) 70%)}
   .abertura-miolo{grid-template-columns:minmax(0,520px);padding-top:70px;align-content:center}
 }
 
